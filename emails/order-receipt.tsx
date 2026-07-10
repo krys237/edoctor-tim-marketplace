@@ -65,8 +65,21 @@ export function OrderReceiptEmail({ order }: { order: Order }) {
 
           <Hr style={{ borderColor: "#E2E8F0", margin: "16px 0" }} />
 
-          <Text style={{ fontSize: "14px", fontWeight: "bold", margin: 0 }}>
-            Sous-total : {formatXaf(order.subtotal)}
+          {/* Le detail n'apparait que s'il y a une remise : sinon la ligne serait doublee. */}
+          {order.promo && (
+            <>
+              <Text style={{ fontSize: "13px", margin: 0 }}>
+                Sous-total : {formatXaf(order.subtotal)}
+              </Text>
+              <Text style={{ fontSize: "13px", margin: "4px 0 0" }}>
+                Code promo {order.promo.code} (−{order.promo.percent} %) : −
+                {formatXaf(order.promo.discount)}
+              </Text>
+            </>
+          )}
+
+          <Text style={{ fontSize: "14px", fontWeight: "bold", margin: "8px 0 0" }}>
+            Sous-total : {formatXaf(order.netSubtotal)}
           </Text>
           <Text style={{ color: MUTED, fontSize: "12px", margin: "4px 0 0" }}>
             Frais de livraison communiqués lors de la confirmation.

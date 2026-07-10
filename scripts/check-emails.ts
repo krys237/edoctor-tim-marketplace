@@ -2,6 +2,7 @@ import { render } from "@react-email/render";
 
 import { OrderInternalEmail } from "@/emails/order-internal";
 import { OrderReceiptEmail } from "@/emails/order-receipt";
+import { promoDiscount } from "@/lib/money";
 import type { Order } from "@/lib/order";
 
 let failures = 0;
@@ -10,8 +11,9 @@ function check(label: string, condition: boolean, detail = "") {
   console.log(`  ${condition ? "OK   " : "ECHEC"} ${label}${detail ? ` — ${detail}` : ""}`);
 }
 
-function makeOrder(doctor: boolean): Order {
+function makeOrder(doctor: boolean, promoPercent?: number): Order {
   const unit = doctor ? 9900 : 30000;
+  const discount = promoPercent ? promoDiscount(unit, promoPercent) : 0;
   return {
     reference: "CMD-20260709-A3F2",
     submittedAt: "2026-07-09T12:00:00.000Z",
@@ -36,6 +38,8 @@ function makeOrder(doctor: boolean): Order {
     subtotal: unit,
     publicSubtotal: 30000,
     doctorCodeApplied: doctor,
+    promo: promoPercent ? { code: "EDOC30", percent: promoPercent, discount } : undefined,
+    netSubtotal: unit - discount,
     currency: "XAF",
     consentGivenAt: "2026-07-09T12:00:00.000Z",
   };
@@ -74,6 +78,25 @@ async function main() {
     const htmlDoctor = digits(await render(OrderReceiptEmail({ order: makeOrder(true) })));
     check("l'accuse client n'expose pas le sous-total public", !htmlDoctor.includes("publicSubtotal"));
     check("l'accuse client affiche le prix paye (9900)", htmlDoctor.includes("9900FCFA"));
+  }
+
+  console.log("\n=== Code promo : le montant facture doit etre le montant remise ===");
+  {
+    // 30 000 - 30 % = 21 000. Le support ne doit jamais facturer 30 000.
+    const support = digits(await render(OrderInternalEmail({ order: makeOrder(false, 30) })));
+    check("code promo nomme", support.includes("EDOC30"));
+    check("remise affichee (9 000)", support.includes("9000FCFA"));
+    check("sous-total a facturer remise (21 000)", support.includes("21000FCFA"));
+    check("mention 'a facturer' presente", support.includes("Sous-totalàfacturer"));
+
+    const client = digits(await render(OrderReceiptEmail({ order: makeOrder(false, 30) })));
+    check("l'accuse client nomme le code", client.includes("EDOC30"));
+    check("l'accuse client affiche le montant remise (21 000)", client.includes("21000FCFA"));
+
+    // Sans promo, aucune ligne de remise ne doit apparaitre.
+    const sansPromo = digits(await render(OrderInternalEmail({ order: makeOrder(false) })));
+    check("sans promo, aucun 'code promo'", !sansPromo.includes("Codepromo"));
+    check("sans promo, pas de mention 'a facturer'", !sansPromo.includes("Sous-totalàfacturer"));
   }
 
   console.log("\n=== Echappement (aucune injection HTML) ===");

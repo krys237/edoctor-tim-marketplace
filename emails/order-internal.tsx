@@ -25,7 +25,7 @@ export function OrderInternalEmail({ order }: { order: Order }) {
     <Html lang="fr">
       <Head />
       <Preview>
-        {`${order.reference} — ${order.items.length} référence(s) — ${formatXaf(order.subtotal)}`}
+        {`${order.reference} — ${order.items.length} référence(s) — ${formatXaf(order.netSubtotal)}`}
       </Preview>
       <Body style={{ backgroundColor: "#F1F5F9", fontFamily: "Arial, sans-serif" }}>
         <Container style={{ backgroundColor: "#FFFFFF", padding: "24px", maxWidth: "640px" }}>
@@ -122,15 +122,44 @@ export function OrderInternalEmail({ order }: { order: Order }) {
 
           <Hr style={{ borderColor: "#E2E8F0", margin: "16px 0" }} />
 
+          {/* Le detail n'apparait qu'en presence d'une remise : sinon les deux
+              lignes porteraient le meme montant. */}
+          {order.promo && (
+            <>
+              <Row>
+                <Column>
+                  <Text style={{ fontSize: "14px", margin: 0 }}>Sous-total</Text>
+                </Column>
+                <Column align="right">
+                  <Text style={{ fontSize: "14px", margin: 0 }}>{formatXaf(order.subtotal)}</Text>
+                </Column>
+              </Row>
+              <Row>
+                <Column>
+                  <Text style={{ fontSize: "14px", margin: "4px 0 0" }}>
+                    Code promo {order.promo.code} (−{order.promo.percent} %)
+                  </Text>
+                </Column>
+                <Column align="right">
+                  <Text style={{ fontSize: "14px", margin: "4px 0 0" }}>
+                    −{formatXaf(order.promo.discount)}
+                  </Text>
+                </Column>
+              </Row>
+            </>
+          )}
+
           <Row>
             <Column>
-              <Text style={{ fontSize: "14px", fontWeight: "bold", margin: 0 }}>
-                Sous-total
+              <Text style={{ fontSize: "14px", fontWeight: "bold", margin: "8px 0 0" }}>
+                {order.promo ? "Sous-total à facturer" : "Sous-total"}
               </Text>
             </Column>
             <Column align="right">
-              <Text style={{ fontSize: "16px", fontWeight: "bold", margin: 0, color: NAVY }}>
-                {formatXaf(order.subtotal)}
+              <Text
+                style={{ fontSize: "16px", fontWeight: "bold", margin: "8px 0 0", color: NAVY }}
+              >
+                {formatXaf(order.netSubtotal)}
               </Text>
             </Column>
           </Row>

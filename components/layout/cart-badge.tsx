@@ -1,5 +1,6 @@
 "use client";
 
+import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 
 import { totalQuantity } from "@/lib/cart-rules";
@@ -17,8 +18,15 @@ export function CartBadge() {
   return (
     <Link
       href="/panier"
-      className="hover:bg-secondary relative inline-flex min-h-11 items-center gap-2 rounded-md px-3 text-sm font-semibold transition-colors"
+      /*
+        Surbrillance tiree du premier plan, pas de `bg-secondary` : ce token est
+        clair, et le lien herite du texte blanc du header marine. Le survol
+        tombait a 1.23:1, sous le seuil WCAG de 4.5:1.
+      */
+      className="hover:bg-primary-foreground/10 relative inline-flex min-h-11 items-center gap-2 rounded-md px-3 text-sm font-semibold transition-colors"
     >
+      {/* Decorative : le mot « Panier » porte deja le sens pour un lecteur d'ecran. */}
+      <ShoppingCart aria-hidden className="size-5 shrink-0" strokeWidth={2} />
       Panier
       {showCount && (
         <span className="bg-accent text-accent-foreground tabular-price inline-flex min-w-6 items-center justify-center rounded-full px-1.5 py-0.5 text-xs font-bold">

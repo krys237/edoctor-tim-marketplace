@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { Brand } from "@/components/layout/brand";
+
 export function SiteFooter() {
   const year = new Date().getFullYear();
 
@@ -8,8 +10,13 @@ export function SiteFooter() {
       <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           <div>
-            <p className="font-heading text-lg font-bold">eDoctor Place</p>
-            <p className="mt-2 max-w-[45ch] text-sm opacity-80">
+            {/*
+              96 px : en dessous, la signature « Dossier médical informatisé »
+              gravée dans le logo devient illisible. Verifie en rendant le
+              fichier aux tailles reelles d'affichage.
+            */}
+            <Brand size={96} />
+            <p className="mt-4 max-w-[45ch] text-sm opacity-80">
               Dispositifs médicaux connectés et consommables. Commande en ligne,
               traitement par notre équipe.
             </p>

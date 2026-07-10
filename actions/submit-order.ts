@@ -14,9 +14,11 @@ import {
   type OrderLine,
   type SubmitOrderResult,
 } from "@/lib/order";
+import { promoDiscount } from "@/lib/money";
 import { generateOrderReference } from "@/lib/order-reference";
 import { getPickupLocation, pickupAvailable } from "@/lib/pickup";
 import { isValidDoctorCode, priceFor } from "@/lib/pricing-doctor";
+import { findPromo } from "@/lib/promo";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { verifyTurnstile } from "@/lib/turnstile";
 
@@ -120,6 +122,32 @@ export async function submitOrder(raw: unknown): Promise<SubmitOrderResult> {
     input.doctorCode && isValidDoctorCode(input.doctorCode),
   );
 
+  /*
+    8. Code promo. Exclusif du code medecin.
+
+    La regle d'exclusivite porte sur la PRESENCE du code medecin, pas sur sa
+    validite : c'est la seule formulation que le navigateur puisse evaluer a
+    l'identique, sans connaitre le secret. Une regle fondee sur la validite
+    ferait diverger le recapitulatif (« -30 % ») de l'email envoye au support.
+
+    Un code promo invalide fait ECHOUER la commande. Le passer sous silence
+    reviendrait a facturer le plein tarif a un client qui a vu une remise.
+  */
+  const doctorCodeProvided = Boolean(input.doctorCode?.trim());
+  const promoCodeProvided = Boolean(input.promoCode?.trim());
+
+  if (doctorCodeProvided && promoCodeProvided) {
+    return {
+      ok: false,
+      error: "Un code médecin et un code promo ne se cumulent pas. N'en gardez qu'un.",
+    };
+  }
+
+  const promo = promoCodeProvided ? findPromo(input.promoCode ?? "") : null;
+  if (promoCodeProvided && !promo) {
+    return { ok: false, error: "Ce code promo n'est pas valide." };
+  }
+
   const items: OrderLine[] = [];
   for (const line of lines) {
     const priced = priceFor(line.product.id, doctorCodeApplied);
@@ -138,6 +166,9 @@ export async function submitOrder(raw: unknown): Promise<SubmitOrderResult> {
   const reference = generateOrderReference();
   const now = new Date().toISOString();
 
+  const subtotal = items.reduce((s, i) => s + i.lineTotal, 0);
+  const discount = promo ? promoDiscount(subtotal, promo.percent) : 0;
+
   const order: Order = {
     reference,
     submittedAt: now,
@@ -153,14 +184,16 @@ export async function submitOrder(raw: unknown): Promise<SubmitOrderResult> {
           }
         : input.fulfillment,
     items,
-    subtotal: items.reduce((s, i) => s + i.lineTotal, 0),
+    subtotal,
     publicSubtotal: items.reduce((s, i) => s + i.publicUnitPrice * i.quantity, 0),
     doctorCodeApplied,
+    promo: promo ? { code: promo.code, percent: promo.percent, discount } : undefined,
+    netSubtotal: subtotal - discount,
     currency: "XAF",
     consentGivenAt: now,
   };
 
-  // 8. Envoi. L'email est le SEUL transport de la commande : si l'envoi echoue,
+  // 9. Envoi. L'email est le SEUL transport de la commande : si l'envoi echoue,
   //    on le dit franchement pour que le client puisse reessayer, panier intact.
   //    Jamais de faux succes.
   const apiKey = process.env.RESEND_API_KEY;

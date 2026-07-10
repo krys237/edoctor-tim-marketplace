@@ -8,12 +8,20 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { submitOrder } from "@/actions/submit-order";
+import { validatePromo } from "@/actions/validate-promo";
 import { cartViolations, resolveLines, subtotal } from "@/lib/cart-rules";
 import { useCart } from "@/lib/cart-store";
-import { formatXaf } from "@/lib/money";
+import { formatXaf, promoDiscount } from "@/lib/money";
 import type { OrderInput } from "@/lib/order";
 import type { PickupLocation } from "@/lib/pickup";
 import type { Product } from "@/lib/schemas";
+
+/*
+  Indicatif fixe. Le site facture en FCFA et ne livre qu'au Cameroun : afficher
+  un selecteur de pays suggererait une couverture qui n'existe pas.
+*/
+const PHONE_COUNTRY_CODE = "+237";
+const PHONE_NATIONAL_DIGITS = 9;
 
 /*
   Schema du FORMULAIRE (a plat, pour React Hook Form). Il differe du schema de
@@ -24,11 +32,18 @@ const FormSchema = z
   .object({
     fullName: z.string().trim().min(2, "Indiquez votre nom complet."),
     email: z.email("Adresse email invalide."),
+    /*
+      L'indicatif +237 est fixe dans l'interface : ce champ ne porte que la
+      partie nationale. On refuse donc le « + », qui signalerait un indicatif
+      saisi deux fois. Un numero camerounais compte 9 chiffres.
+    */
     phone: z
       .string()
       .trim()
-      .min(8, "Numéro trop court.")
-      .regex(/^\+?[0-9\s().-]+$/, "Numéro de téléphone invalide."),
+      .regex(/^[0-9\s().-]+$/, "Numéro de téléphone invalide.")
+      .refine((v) => v.replace(/\D/g, "").length === PHONE_NATIONAL_DIGITS, {
+        message: `Un numéro camerounais compte ${PHONE_NATIONAL_DIGITS} chiffres.`,
+      }),
     fulfillmentType: z.enum(["delivery", "pickup"]),
     addressLine1: z.string().trim().optional(),
     addressLine2: z.string().trim().optional(),
@@ -53,8 +68,15 @@ const FormSchema = z
 
 type FormValues = z.input<typeof FormSchema>;
 
+/*
+  `placeholder:text-muted-foreground` n'est pas cosmetique. Sans lui, le
+  navigateur applique la couleur du texte a 50% d'opacite, soit #888C93 sur
+  blanc : 3.38:1, sous le seuil WCAG de 4.5:1. `--muted-foreground` donne
+  7.56:1, tout en restant nettement plus clair que le texte saisi (2.35:1
+  entre les deux), donc distinguable.
+*/
 const inputClass =
-  "border-input bg-card min-h-11 w-full rounded-md border px-3 text-base";
+  "border-input bg-card placeholder:text-muted-foreground min-h-11 w-full rounded-md border px-3 text-base";
 const labelClass = "mb-1.5 block text-sm font-medium";
 const errorClass = "text-destructive mt-1 text-xs";
 
@@ -74,6 +96,16 @@ export function CheckoutForm({
 
   const [serverError, setServerError] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState("");
+
+  /*
+    Code promo. Le navigateur ne connait aucun code : il soumet un candidat a
+    `validatePromo` et n'obtient qu'un pourcentage. La liste vit dans
+    lib/promo.ts, protegee par `server-only`.
+  */
+  const [promoInput, setPromoInput] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState<{ code: string; percent: number } | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
+  const [promoPending, setPromoPending] = useState(false);
 
   /*
     Cle d'idempotence generee UNE FOIS a l'ouverture du checkout. Elle rend un
@@ -113,11 +145,54 @@ export function CheckoutForm({
   const fulfillmentType = watch("fulfillmentType");
   const pickupPossible = pickupLocations.length > 0;
 
+  /*
+    Exclusivite promo / code medecin.
+
+    La regle porte sur la PRESENCE d'un code medecin, jamais sur sa validite :
+    le navigateur ignore le secret et ne pourrait pas evaluer la validite. La
+    Server Action applique exactement la meme regle, si bien que le
+    recapitulatif ne peut pas promettre une remise qu'elle refuserait.
+  */
+  const doctorCodeTyped = (watch("doctorCode") ?? "").trim();
+  const promoBlocked = doctorCodeTyped.length > 0;
+
+  const discount = appliedPromo ? promoDiscount(total, appliedPromo.percent) : 0;
+  const netTotal = total - discount;
+
   // Panier vide ou invalide : le checkout n'a pas lieu d'etre.
   useEffect(() => {
     if (orderPlaced.current) return;
     if (hydrated && lines.length === 0) router.replace("/panier");
   }, [hydrated, lines.length, router]);
+
+  // Un code medecin saisi retire la promo affichee, plutot que de la laisser
+  // mentir jusqu'a ce que la Server Action refuse la commande.
+  useEffect(() => {
+    if (promoBlocked) {
+      setAppliedPromo(null);
+      setPromoError(null);
+    }
+  }, [promoBlocked]);
+
+  async function onApplyPromo() {
+    setPromoError(null);
+    setPromoPending(true);
+    const result = await validatePromo(promoInput);
+    setPromoPending(false);
+
+    if (!result.ok) {
+      setAppliedPromo(null);
+      setPromoError(result.error);
+      return;
+    }
+    setAppliedPromo({ code: result.code, percent: result.percent });
+  }
+
+  function onRemovePromo() {
+    setAppliedPromo(null);
+    setPromoError(null);
+    setPromoInput("");
+  }
 
   async function onSubmit(values: FormValues) {
     setServerError(null);
@@ -125,7 +200,12 @@ export function CheckoutForm({
     const payload: OrderInput = {
       idempotencyKey: idempotencyKey.current,
       items: items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
-      customer: { fullName: values.fullName, email: values.email, phone: values.phone },
+      customer: {
+        fullName: values.fullName,
+        email: values.email,
+        // Le champ ne porte que la partie nationale : on reconstitue le numero complet.
+        phone: `${PHONE_COUNTRY_CODE} ${values.phone.trim()}`,
+      },
       business: values.companyName
         ? { companyName: values.companyName, taxId: values.taxId ?? "" }
         : undefined,
@@ -140,6 +220,9 @@ export function CheckoutForm({
             }
           : { type: "pickup", locationId: values.locationId ?? "" },
       doctorCode: values.doctorCode ?? "",
+      // Le code retenu par le serveur, pas la saisie brute : on n'envoie jamais
+      // un code que `validatePromo` n'a pas deja reconnu.
+      promoCode: appliedPromo?.code ?? "",
       consent: true,
       turnstileToken,
     };
@@ -189,7 +272,18 @@ export function CheckoutForm({
               <label htmlFor="fullName" className={labelClass}>
                 Nom complet <span aria-hidden className="text-destructive">*</span>
               </label>
-              <input id="fullName" autoComplete="name" className={inputClass} {...register("fullName")} />
+              {/*
+                Les placeholders donnent un EXEMPLE de format attendu. Ils ne
+                repetent jamais le libelle : un placeholder disparait des la
+                premiere frappe, il ne peut donc pas tenir lieu d'etiquette.
+              */}
+              <input
+                id="fullName"
+                autoComplete="name"
+                placeholder="Marie Ngo Bassong"
+                className={inputClass}
+                {...register("fullName")}
+              />
               {errors.fullName && <p className={errorClass} role="alert">{errors.fullName.message}</p>}
             </div>
 
@@ -198,7 +292,14 @@ export function CheckoutForm({
                 Email <span aria-hidden className="text-destructive">*</span>
               </label>
               {/* type=email declenche le bon clavier sur mobile */}
-              <input id="email" type="email" autoComplete="email" className={inputClass} {...register("email")} />
+              <input
+                id="email"
+                type="email"
+                autoComplete="email"
+                placeholder="marie.bassong@exemple.cm"
+                className={inputClass}
+                {...register("email")}
+              />
               {errors.email && <p className={errorClass} role="alert">{errors.email.message}</p>}
             </div>
 
@@ -206,7 +307,30 @@ export function CheckoutForm({
               <label htmlFor="phone" className={labelClass}>
                 Téléphone <span aria-hidden className="text-destructive">*</span>
               </label>
-              <input id="phone" type="tel" autoComplete="tel" placeholder="+237 6 XX XX XX XX" className={inputClass} {...register("phone")} />
+              <div className="flex">
+                {/*
+                  L'indicatif est annonce via aria-describedby : sans cela, un
+                  lecteur d'ecran dicte « Telephone » sans le +237 affiche a
+                  l'ecran, et l'utilisateur le saisit une seconde fois.
+                */}
+                <span
+                  id="phone-prefix"
+                  className="border-input bg-secondary text-muted-foreground flex min-h-11 items-center rounded-l-md border border-r-0 px-3 text-base select-none"
+                >
+                  {PHONE_COUNTRY_CODE}
+                </span>
+                <input
+                  id="phone"
+                  type="tel"
+                  inputMode="tel"
+                  // `tel-national` et non `tel` : l'indicatif ne fait pas partie du champ.
+                  autoComplete="tel-national"
+                  placeholder="6 99 00 11 22"
+                  aria-describedby="phone-prefix"
+                  className={`${inputClass} min-w-0 flex-1 rounded-l-none`}
+                  {...register("phone")}
+                />
+              </div>
               {errors.phone && <p className={errorClass} role="alert">{errors.phone.message}</p>}
             </div>
           </div>
@@ -244,20 +368,38 @@ export function CheckoutForm({
                 <label htmlFor="addressLine1" className={labelClass}>
                   Adresse <span aria-hidden className="text-destructive">*</span>
                 </label>
-                <input id="addressLine1" autoComplete="address-line1" className={inputClass} {...register("addressLine1")} />
+                <input
+                  id="addressLine1"
+                  autoComplete="address-line1"
+                  placeholder="Rue 1.234, Bonapriso"
+                  className={inputClass}
+                  {...register("addressLine1")}
+                />
                 {errors.addressLine1 && <p className={errorClass} role="alert">{errors.addressLine1.message}</p>}
               </div>
               <div className="sm:col-span-2">
                 <label htmlFor="addressLine2" className={labelClass}>
                   Complément d&apos;adresse
                 </label>
-                <input id="addressLine2" autoComplete="address-line2" className={inputClass} {...register("addressLine2")} />
+                <input
+                  id="addressLine2"
+                  autoComplete="address-line2"
+                  placeholder="Immeuble Les Palmiers, 2e étage"
+                  className={inputClass}
+                  {...register("addressLine2")}
+                />
               </div>
               <div>
                 <label htmlFor="city" className={labelClass}>
                   Ville ou quartier <span aria-hidden className="text-destructive">*</span>
                 </label>
-                <input id="city" autoComplete="address-level2" className={inputClass} {...register("city")} />
+                <input
+                  id="city"
+                  autoComplete="address-level2"
+                  placeholder="Douala"
+                  className={inputClass}
+                  {...register("city")}
+                />
                 {errors.city && <p className={errorClass} role="alert">{errors.city.message}</p>}
               </div>
               <div className="sm:col-span-2">
@@ -270,7 +412,14 @@ export function CheckoutForm({
                 <label htmlFor="instructions" className={labelClass}>
                   Instructions de livraison (étage, repère, horaires)
                 </label>
-                <textarea id="instructions" rows={3} maxLength={500} className={`${inputClass} min-h-24 py-2`} {...register("instructions")} />
+                <textarea
+                  id="instructions"
+                  rows={3}
+                  maxLength={500}
+                  placeholder="Portail bleu en face de la pharmacie, appeler en arrivant"
+                  className={`${inputClass} min-h-24 py-2`}
+                  {...register("instructions")}
+                />
               </div>
             </div>
           ) : (
@@ -300,11 +449,22 @@ export function CheckoutForm({
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div>
               <label htmlFor="companyName" className={labelClass}>Raison sociale</label>
-              <input id="companyName" autoComplete="organization" className={inputClass} {...register("companyName")} />
+              <input
+                id="companyName"
+                autoComplete="organization"
+                placeholder="Clinique de la Cité"
+                className={inputClass}
+                {...register("companyName")}
+              />
             </div>
             <div>
               <label htmlFor="taxId" className={labelClass}>Numéro d&apos;identifiant fiscal</label>
-              <input id="taxId" className={inputClass} {...register("taxId")} />
+              <input
+                id="taxId"
+                placeholder="Tel qu'il figure sur votre attestation"
+                className={inputClass}
+                {...register("taxId")}
+              />
             </div>
           </div>
         </section>
@@ -313,7 +473,13 @@ export function CheckoutForm({
           <h2 className="text-xl">Code médecin (facultatif)</h2>
           <div className="mt-4 max-w-sm">
             <label htmlFor="doctorCode" className={labelClass}>Votre code</label>
-            <input id="doctorCode" autoComplete="off" className={inputClass} {...register("doctorCode")} />
+            <input
+              id="doctorCode"
+              autoComplete="off"
+              placeholder="Code remis par eDoctor"
+              className={inputClass}
+              {...register("doctorCode")}
+            />
             <p className="text-muted-foreground mt-1.5 text-xs">
               Si votre code est valide, le tarif praticien est appliqué à la
               confirmation de votre commande.
@@ -336,11 +502,90 @@ export function CheckoutForm({
           ))}
         </ul>
 
+        <section className="mt-4 border-t pt-4">
+          <h3 className="text-sm font-medium">Code promo</h3>
+
+          {promoBlocked ? (
+            <p className="text-muted-foreground mt-1.5 text-xs">
+              Un code médecin est saisi. Le tarif praticien et un code promo ne se
+              cumulent pas : videz le champ « Code médecin » pour utiliser un code promo.
+            </p>
+          ) : appliedPromo ? (
+            <div className="mt-2 flex items-center justify-between gap-3">
+              <p className="text-success text-sm font-semibold">
+                {appliedPromo.code} appliqué (−{appliedPromo.percent} %)
+              </p>
+              <button
+                type="button"
+                onClick={onRemovePromo}
+                className="text-muted-foreground hover:text-foreground shrink-0 text-xs underline"
+              >
+                Retirer
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="mt-2 flex gap-2">
+                <label htmlFor="promoCode" className="sr-only">
+                  Votre code promo
+                </label>
+                <input
+                  id="promoCode"
+                  autoComplete="off"
+                  autoCapitalize="characters"
+                  placeholder="Votre code"
+                  value={promoInput}
+                  onChange={(e) => setPromoInput(e.target.value)}
+                  className={`${inputClass} min-w-0 flex-1`}
+                />
+                {/*
+                  `type="button"` : sans cela, ce bouton soumettrait la commande,
+                  puisqu'il vit a l'interieur du <form>.
+                */}
+                <button
+                  type="button"
+                  onClick={onApplyPromo}
+                  disabled={promoPending || promoInput.trim().length === 0}
+                  className="bg-secondary text-secondary-foreground hover:bg-secondary/80 min-h-11 shrink-0 cursor-pointer rounded-md px-4 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {promoPending ? "Vérification…" : "Appliquer"}
+                </button>
+              </div>
+              {promoError && (
+                <p className={errorClass} role="alert">
+                  {promoError}
+                </p>
+              )}
+            </>
+          )}
+        </section>
+
         <dl className="mt-4 space-y-2 border-t pt-4 text-sm">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">Sous-total</dt>
             <dd className="tabular-price font-semibold">{formatXaf(total)}</dd>
           </div>
+
+          {appliedPromo && (
+            <>
+              <div className="text-success flex justify-between">
+                <dt>
+                  Code {appliedPromo.code} (−{appliedPromo.percent} %)
+                </dt>
+                <dd className="tabular-price font-semibold">−{formatXaf(discount)}</dd>
+              </div>
+              {/*
+                Toujours « sous-total » et jamais « total » : les frais de
+                livraison restent inconnus, et un « total » creerait une attente
+                de prix ferme. Voir lib/money.ts.
+              */}
+              <div className="flex justify-between border-t pt-2">
+                <dt className="text-muted-foreground">Sous-total après remise</dt>
+                <dd className="tabular-price font-semibold">{formatXaf(netTotal)}</dd>
+              </div>
+            </>
+          )}
+
           <div className="flex justify-between">
             <dt className="text-muted-foreground">Livraison</dt>
             <dd className="text-right text-xs">Communiquée à la confirmation</dd>

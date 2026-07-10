@@ -73,6 +73,12 @@ export const OrderInputSchema = z.object({
   /** Jamais compare en clair cote client. Voir lib/pricing-doctor.ts. */
   doctorCode: optionalText(64),
 
+  /**
+   * Jamais compare en clair cote client. Voir lib/promo.ts.
+   * Exclusif du code medecin : la Server Action refuse les deux ensemble.
+   */
+  promoCode: optionalText(64),
+
   consent: z.literal(true, "Vous devez accepter la politique de confidentialité."),
 
   turnstileToken: optionalText(4096),
@@ -103,6 +109,13 @@ export type Order = {
   /** Sous-total aux prix publics, pour que le support voie la remise consentie. */
   publicSubtotal: Xaf;
   doctorCodeApplied: boolean;
+  /** Code promo retenu par le serveur. Exclusif du tarif praticien. */
+  promo?: { code: string; percent: number; discount: Xaf };
+  /**
+   * Sous-total apres remise promo, egal a `subtotal` s'il n'y en a pas.
+   * Toujours nomme « sous-total » : la livraison reste inconnue a ce stade.
+   */
+  netSubtotal: Xaf;
   currency: "XAF";
   consentGivenAt: string;
 };

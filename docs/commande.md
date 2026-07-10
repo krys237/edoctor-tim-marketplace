@@ -26,7 +26,8 @@ Une valeur venant du client n'est pas une donnée, c'est une suggestion.
 6. Règles métier (cart-rules.ts)        → « 6 Connect sans bandelettes » bloqué ici
 7. Mode de réception                    → point de retrait vérifié contre la liste
 8. Code médecin                         → comparaison à temps constant, serveur
-9. Envoi Resend                         → support (+ JSON joint) puis accusé client
+9. Code promo                           → exclusif du code médecin ; invalide = refus
+10. Envoi Resend                        → support (+ JSON joint) puis accusé client
 ```
 
 Les étapes 5 et 6 rejouent **exactement** ce que l'interface a déjà vérifié. La
@@ -58,6 +59,35 @@ momentanément indisponible. Votre panier est conservé » et le `localStorage` 
   avec un avertissement serveur. En production, une clé absente **refuse** la commande.
 - **Le code médecin est unique** (`DOCTOR_CODE`). Sans valeur, aucun code n'est accepté :
   pas de repli permissif. Un code par praticien suppose une base de données.
+
+## 4 bis. Codes promo
+
+Quatre codes statiques vivent dans `lib/promo.ts` : `EDOC10`, `EDOC20`, `EDOC30`, `EDOC40`,
+pour −10 %, −20 %, −30 % et −40 % sur le sous-total.
+
+Le module est marqué `server-only`, comme `lib/pricing-doctor.ts` : **la liste ne part
+jamais dans le bundle du navigateur**. Le récapitulatif interroge la Server Action
+`actions/validate-promo.ts`, qui ne renvoie qu'un pourcentage — jamais la table.
+
+Trois règles, toutes appliquées côté serveur, qui font foi :
+
+| Règle | Pourquoi |
+|---|---|
+| Promo et code médecin sont **exclusifs** | Sinon un praticien cumule −40 % sur une grille déjà remisée |
+| L'exclusivité porte sur la **présence** du code médecin, pas sa validité | Seule formulation que le navigateur peut évaluer à l'identique, sans connaître le secret. Une règle fondée sur la validité ferait diverger le récapitulatif de l'email |
+| Un code promo invalide **refuse la commande** | Le passer sous silence reviendrait à facturer le plein tarif à un client qui a vu une remise |
+
+La remise est calculée par `promoDiscount()` dans `lib/money.ts`, module partagé
+navigateur/serveur : le récapitulatif ne peut pas afficher un montant que la Server Action
+recalculerait autrement. `npm run check:emails` vérifie que les deux emails portent bien
+le montant remisé, et non le plein tarif.
+
+**Limites connues.** Ces codes n'ont ni date d'expiration, ni nombre d'utilisations, ni
+rattachement à un client : un code diffusé reste valable indéfiniment et pour tout le
+monde. Et `validatePromo` est un endpoint public : quatre codes courts se devinent. Le
+limiteur de débit par IP (compteur distinct de celui des commandes) ralentit l'essai en
+force, il ne l'interdit pas. Une vraie mécanique promotionnelle suppose une base de
+données.
 
 ## 5. Données de santé — la contrainte qui a façonné le formulaire
 

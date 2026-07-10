@@ -2,6 +2,7 @@ import "server-only";
 
 import raw from "@/data/pricing-doctor.server.json";
 import { getProductById } from "@/lib/catalog";
+import { safeEqual } from "@/lib/constant-time";
 import { discountPercent, type Xaf } from "@/lib/money";
 
 /*
@@ -21,18 +22,6 @@ const DOCTOR_PRICES: Record<string, Xaf> = Object.fromEntries(
     .filter(([key, value]) => !key.startsWith("_") && typeof value === "number")
     .map(([key, value]) => [key, value as number]),
 );
-
-/**
- * Comparaison a temps constant : une comparaison `===` sur une chaine s'arrete
- * au premier caractere different, ce qui laisse fuir la longueur du prefixe
- * correct par le temps de reponse.
- */
-function safeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return diff === 0;
-}
 
 export function isValidDoctorCode(candidate: string): boolean {
   const expected = process.env.DOCTOR_CODE;

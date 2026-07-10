@@ -27,3 +27,16 @@ export function discountPercent(publicPrice: Xaf, discountedPrice: Xaf): number 
   if (publicPrice <= 0 || discountedPrice >= publicPrice) return 0;
   return Math.round((1 - discountedPrice / publicPrice) * 100);
 }
+
+/**
+ * Remise d'un code promo, en francs entiers.
+ *
+ * Volontairement ici, et non dans `lib/promo.ts` : ce module est partage par le
+ * navigateur et le serveur, si bien que le recapitulatif ne peut pas afficher
+ * un montant que la Server Action recalculerait autrement. Le pourcentage, lui,
+ * ne quitte le serveur qu'apres validation du code.
+ */
+export function promoDiscount(subtotal: Xaf, percent: number): Xaf {
+  if (subtotal <= 0 || percent <= 0) return 0;
+  return Math.round((subtotal * Math.min(percent, 100)) / 100);
+}

@@ -1,13 +1,15 @@
 import Link from "next/link";
 
+import { Brand } from "@/components/layout/brand";
 import { CartBadge } from "@/components/layout/cart-badge";
 
 export function SiteHeader() {
   return (
     <header className="bg-primary text-primary-foreground sticky top-0 z-40">
       <div className="mx-auto flex w-full max-w-7xl items-center gap-4 px-4 py-3 sm:px-6">
-        <Link href="/" className="font-heading text-lg font-bold tracking-tight">
-          eDoctor Place
+        <Link href="/" className="hover:opacity-90 transition-opacity">
+          <span className="sr-only">Accueil</span>
+          <Brand size={44} />
         </Link>
 
         <nav aria-label="Navigation principale" className="ml-6 hidden sm:block">
