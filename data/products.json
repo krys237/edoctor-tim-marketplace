@@ -1,0 +1,303 @@
+[
+  {
+    "id": "e-dr-tim-6-connect",
+    "sku": "EDT-6C",
+    "name": "Appareil e-Dr Tim (6 Connect)",
+    "brand": "e-Dr Tim",
+    "category": "dispositifs-connectes",
+    "price": 30000,
+    "availability": "in_stock",
+    "shortDescription": "Analyseur multiparamétrique connecté",
+    "description": "Analyseur multiparamétrique connecté. Mesure la glycémie, le profil 3-en-1, la β-cétone, le cholestérol total et l'acide urique selon la bandelette utilisée. Synchronisation avec l'application mobile.\n\nLa commande de cet appareil exige au moins un pack de bandelettes réactives.",
+    "images": [
+      {
+        "src": "/images/products/e-dr-tim-6-connect.jpeg",
+        "alt": "Appareil e-Dr Tim 6 Connect affichant une mesure, accompagné de son application mobile et de cinq flacons de bandelettes réactives"
+      }
+    ],
+    "specs": [
+      { "label": "Paramètres mesurés", "value": "Glycémie, 3-en-1, β-cétone, cholestérol total, acide urique" },
+      { "label": "Connectivité", "value": "Synchronisation application mobile" },
+      { "label": "Consommable requis", "value": "Bandelettes réactives e-Dr Tim" }
+    ],
+    "medical": {
+      "ceMarked": null,
+      "deviceClass": null,
+      "noticeUrl": null,
+      "prescriptionRequired": null
+    },
+    "relatedProductIds": [
+      "bandelettes-glycemie",
+      "bandelettes-3-en-1",
+      "bandelettes-beta-cetone",
+      "bandelettes-cholesterol-total",
+      "bandelettes-acide-urique"
+    ],
+    "requiresConsumable": true
+  },
+  {
+    "id": "tensiometre-connecte",
+    "sku": "EDT-TENS",
+    "name": "Tensiomètre artériel connecté",
+    "brand": "e-Dr Tim",
+    "category": "dispositifs-connectes",
+    "price": 19800,
+    "availability": "in_stock",
+    "shortDescription": "Mesure automatique de la pression artérielle",
+    "description": "Mesure automatique de la pression artérielle avec synchronisation vers l'application mobile. Historique des mesures et suivi dans le temps.",
+    "images": [
+      {
+        "src": "/images/products/tensiometre-connecte.jpeg",
+        "alt": "Tensiomètre artériel connecté avec son brassard et l'application mobile associée"
+      }
+    ],
+    "specs": [
+      { "label": "Mesure", "value": "Pression artérielle systolique et diastolique" },
+      { "label": "Connectivité", "value": "Synchronisation application mobile" },
+      { "label": "Port", "value": "Brassard au bras" }
+    ],
+    "medical": {
+      "ceMarked": null,
+      "deviceClass": null,
+      "noticeUrl": null,
+      "prescriptionRequired": null
+    },
+    "relatedProductIds": [],
+    "requiresConsumable": false
+  },
+  {
+    "id": "thermometre-laser-infrarouge",
+    "sku": "EDT-THERM",
+    "name": "Thermomètre laser infrarouge",
+    "brand": "e-Dr Tim",
+    "category": "dispositifs-connectes",
+    "price": 9000,
+    "availability": "in_stock",
+    "shortDescription": "Mesure sans contact, résultat en une seconde",
+    "description": "Mesure de la température sans contact, en visée frontale ou auriculaire. Résultat affiché en une seconde.",
+    "images": [
+      {
+        "src": "/images/products/thermometre-laser-infrarouge.jpeg",
+        "alt": "Thermomètre laser infrarouge sans contact, de couleur blanche et bleue"
+      }
+    ],
+    "specs": [
+      { "label": "Mode de mesure", "value": "Sans contact, frontal ou auriculaire" },
+      { "label": "Temps de réponse", "value": "1 seconde" }
+    ],
+    "medical": {
+      "ceMarked": null,
+      "deviceClass": null,
+      "noticeUrl": null,
+      "prescriptionRequired": null
+    },
+    "relatedProductIds": [],
+    "requiresConsumable": false
+  },
+  {
+    "id": "pese-personne-connecte",
+    "sku": "EDT-PESE",
+    "name": "Pèse-personne connecté",
+    "brand": "e-Dr Tim",
+    "category": "dispositifs-connectes",
+    "price": 15000,
+    "availability": "in_stock",
+    "shortDescription": "Poids et IMC, historique et courbes",
+    "description": "Mesure du poids et calcul de l'indice de masse corporelle. Synchronisation avec l'application mobile, historique et courbes d'évolution.",
+    "images": [
+      {
+        "src": "/images/products/pese-personne-connecte.jpeg",
+        "alt": "Pèse-personne connecté à plateau noir, avec l'application mobile affichant le suivi du poids"
+      }
+    ],
+    "specs": [
+      { "label": "Mesures", "value": "Poids, indice de masse corporelle (IMC)" },
+      { "label": "Connectivité", "value": "Synchronisation application mobile" },
+      { "label": "Suivi", "value": "Historique et courbes d'évolution" }
+    ],
+    "medical": {
+      "ceMarked": null,
+      "deviceClass": null,
+      "noticeUrl": null,
+      "prescriptionRequired": null
+    },
+    "relatedProductIds": [],
+    "requiresConsumable": false
+  },
+  {
+    "id": "saturometre-connecte",
+    "sku": "EDT-SATU",
+    "name": "Saturomètre connecté",
+    "brand": "e-Dr Tim",
+    "category": "dispositifs-connectes",
+    "price": 15000,
+    "availability": "in_stock",
+    "shortDescription": "Saturation en oxygène (SpO₂) et pouls en temps réel",
+    "description": "Oxymètre de pouls mesurant la saturation en oxygène du sang (SpO₂) et la fréquence du pouls en temps réel. Se place au bout du doigt.",
+    "images": [
+      {
+        "src": "/images/products/saturometre-connecte.jpeg",
+        "alt": "Saturomètre de doigt connecté, boîtier bleu avec écran affichant la saturation en oxygène et le pouls"
+      }
+    ],
+    "specs": [
+      { "label": "Mesures", "value": "Saturation en oxygène (SpO₂), fréquence du pouls" },
+      { "label": "Affichage", "value": "Temps réel" },
+      { "label": "Port", "value": "Bout du doigt" }
+    ],
+    "medical": {
+      "ceMarked": null,
+      "deviceClass": null,
+      "noticeUrl": null,
+      "prescriptionRequired": null
+    },
+    "relatedProductIds": [],
+    "requiresConsumable": false
+  },
+
+  {
+    "id": "bandelettes-glycemie",
+    "sku": "EDT-BAN-A",
+    "name": "Bandelettes réactives — Glycémie",
+    "brand": "e-Dr Tim",
+    "category": "consommables",
+    "price": 19800,
+    "availability": "in_stock",
+    "shortDescription": "Pack de bandelettes pour la mesure de la glycémie",
+    "description": "Bandelettes réactives destinées à la mesure de la glycémie sur l'appareil e-Dr Tim (6 Connect).",
+    "images": [
+      {
+        "src": "/images/products/e-dr-tim-6-connect.jpeg",
+        "alt": "Flacons de bandelettes réactives compatibles avec l'appareil e-Dr Tim 6 Connect"
+      }
+    ],
+    "specs": [
+      { "label": "Paramètre", "value": "Glycémie" },
+      { "label": "Compatibilité", "value": "Appareil e-Dr Tim (6 Connect)" }
+    ],
+    "medical": {
+      "ceMarked": null,
+      "deviceClass": null,
+      "noticeUrl": null,
+      "prescriptionRequired": null
+    },
+    "relatedProductIds": ["e-dr-tim-6-connect"],
+    "requiresConsumable": false
+  },
+  {
+    "id": "bandelettes-3-en-1",
+    "sku": "EDT-BAN-B",
+    "name": "Bandelettes réactives — 3-en-1",
+    "brand": "e-Dr Tim",
+    "category": "consommables",
+    "price": 19800,
+    "availability": "in_stock",
+    "shortDescription": "Pack de bandelettes pour le profil 3-en-1",
+    "description": "Bandelettes réactives destinées au profil 3-en-1 sur l'appareil e-Dr Tim (6 Connect).",
+    "images": [
+      {
+        "src": "/images/products/e-dr-tim-6-connect.jpeg",
+        "alt": "Flacons de bandelettes réactives compatibles avec l'appareil e-Dr Tim 6 Connect"
+      }
+    ],
+    "specs": [
+      { "label": "Paramètre", "value": "Profil 3-en-1" },
+      { "label": "Compatibilité", "value": "Appareil e-Dr Tim (6 Connect)" }
+    ],
+    "medical": {
+      "ceMarked": null,
+      "deviceClass": null,
+      "noticeUrl": null,
+      "prescriptionRequired": null
+    },
+    "relatedProductIds": ["e-dr-tim-6-connect"],
+    "requiresConsumable": false
+  },
+  {
+    "id": "bandelettes-beta-cetone",
+    "sku": "EDT-BAN-C",
+    "name": "Bandelettes réactives — β-Cétone",
+    "brand": "e-Dr Tim",
+    "category": "consommables",
+    "price": 30000,
+    "availability": "in_stock",
+    "shortDescription": "Pack de bandelettes pour la mesure de la β-cétone",
+    "description": "Bandelettes réactives destinées à la mesure de la β-cétone sur l'appareil e-Dr Tim (6 Connect).",
+    "images": [
+      {
+        "src": "/images/products/e-dr-tim-6-connect.jpeg",
+        "alt": "Flacons de bandelettes réactives compatibles avec l'appareil e-Dr Tim 6 Connect"
+      }
+    ],
+    "specs": [
+      { "label": "Paramètre", "value": "β-cétone" },
+      { "label": "Compatibilité", "value": "Appareil e-Dr Tim (6 Connect)" }
+    ],
+    "medical": {
+      "ceMarked": null,
+      "deviceClass": null,
+      "noticeUrl": null,
+      "prescriptionRequired": null
+    },
+    "relatedProductIds": ["e-dr-tim-6-connect"],
+    "requiresConsumable": false
+  },
+  {
+    "id": "bandelettes-cholesterol-total",
+    "sku": "EDT-BAN-D",
+    "name": "Bandelettes réactives — Cholestérol total",
+    "brand": "e-Dr Tim",
+    "category": "consommables",
+    "price": 30000,
+    "availability": "in_stock",
+    "shortDescription": "Pack de bandelettes pour la mesure du cholestérol total",
+    "description": "Bandelettes réactives destinées à la mesure du cholestérol total sur l'appareil e-Dr Tim (6 Connect).",
+    "images": [
+      {
+        "src": "/images/products/e-dr-tim-6-connect.jpeg",
+        "alt": "Flacons de bandelettes réactives compatibles avec l'appareil e-Dr Tim 6 Connect"
+      }
+    ],
+    "specs": [
+      { "label": "Paramètre", "value": "Cholestérol total" },
+      { "label": "Compatibilité", "value": "Appareil e-Dr Tim (6 Connect)" }
+    ],
+    "medical": {
+      "ceMarked": null,
+      "deviceClass": null,
+      "noticeUrl": null,
+      "prescriptionRequired": null
+    },
+    "relatedProductIds": ["e-dr-tim-6-connect"],
+    "requiresConsumable": false
+  },
+  {
+    "id": "bandelettes-acide-urique",
+    "sku": "EDT-BAN-E",
+    "name": "Bandelettes réactives — Acide urique",
+    "brand": "e-Dr Tim",
+    "category": "consommables",
+    "price": 19800,
+    "availability": "in_stock",
+    "shortDescription": "Pack de bandelettes pour la mesure de l'acide urique",
+    "description": "Bandelettes réactives destinées à la mesure de l'acide urique sur l'appareil e-Dr Tim (6 Connect).",
+    "images": [
+      {
+        "src": "/images/products/e-dr-tim-6-connect.jpeg",
+        "alt": "Flacons de bandelettes réactives compatibles avec l'appareil e-Dr Tim 6 Connect"
+      }
+    ],
+    "specs": [
+      { "label": "Paramètre", "value": "Acide urique" },
+      { "label": "Compatibilité", "value": "Appareil e-Dr Tim (6 Connect)" }
+    ],
+    "medical": {
+      "ceMarked": null,
+      "deviceClass": null,
+      "noticeUrl": null,
+      "prescriptionRequired": null
+    },
+    "relatedProductIds": ["e-dr-tim-6-connect"],
+    "requiresConsumable": false
+  }
+]

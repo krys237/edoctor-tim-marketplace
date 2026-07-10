@@ -1,0 +1,15 @@
+{
+  "_comment": "TARIFS CODE MEDECIN — NE JAMAIS IMPORTER DEPUIS UN COMPOSANT CLIENT. Montants en francs CFA, entiers. Source : 'description -prix-promo des produits.pdf'. Les pourcentages de remise ne sont PAS stockes : ils sont derives de ces montants (cf. lib/money.ts), afin qu'un badge ne puisse jamais contredire le prix paye.",
+
+  "e-dr-tim-6-connect": 9900,
+  "tensiometre-connecte": 14900,
+  "thermometre-laser-infrarouge": 5900,
+  "pese-personne-connecte": 11900,
+  "saturometre-connecte": 9800,
+
+  "bandelettes-glycemie": 15250,
+  "bandelettes-3-en-1": 13725,
+  "bandelettes-beta-cetone": 22875,
+  "bandelettes-cholesterol-total": 22875,
+  "bandelettes-acide-urique": 15555
+}
