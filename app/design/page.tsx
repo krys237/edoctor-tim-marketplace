@@ -167,7 +167,7 @@ export default function DesignPage() {
   return (
     <main id="contenu" className="min-h-full">
       <div className="border-b p-8">
-        <h1 className="text-3xl">eDoctor Place — Référence de style</h1>
+        <h1 className="text-3xl">e-Doctor TIM Marketplace — Référence de style</h1>
         <p className="text-muted-foreground mt-2 max-w-[65ch] text-sm">
           Page interne, non indexee. Elle rend les tokens de{" "}
           <code>app/globals.css</code>. Les ratios de contraste sont verifies

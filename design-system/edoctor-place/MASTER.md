@@ -6,7 +6,7 @@
 
 ---
 
-**Project:** eDoctor Place
+**Project:** e-Doctor TIM Marketplace
 **Generated:** 2026-07-09 11:05:03
 **Category:** Healthcare App
 **Design Dials:** Variance 3/10 (Centered / Minimal) | Motion 2/10 (Subtle) | Density 5/10 (Standard)

@@ -62,7 +62,7 @@ export function SiteFooter() {
           </p>
 
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs opacity-70">
-            <p>© {year} eDoctor Place</p>
+            <p>© {year} e-Doctor TIM Marketplace</p>
             {/*
               Attribution imposee par l'EULA de Butler : la licence n'autorise la
               redistribution des fichiers (servir un .woff2 en est une) qu'a la

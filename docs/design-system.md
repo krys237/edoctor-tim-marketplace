@@ -1,4 +1,4 @@
-# Système de design eDoctor Place
+# Système de design e-Doctor TIM Marketplace
 
 > **Source de vérité des valeurs** : `app/globals.css`.
 > **Vérification** : `python scripts/check-contrast.py` — doit sortir en code 0.

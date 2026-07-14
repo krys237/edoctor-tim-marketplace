@@ -43,8 +43,8 @@ export const metadata: Metadata = {
   */
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: {
-    default: "eDoctor Place — Equipements medicaux",
-    template: "%s | eDoctor Place",
+    default: "e-Doctor TIM Marketplace — Equipements medicaux",
+    template: "%s | e-Doctor TIM Marketplace",
   },
   description:
     "Tensiometres, glucometres, dispositifs connectes et consommables medicaux. Commande en ligne, livraison ou retrait.",

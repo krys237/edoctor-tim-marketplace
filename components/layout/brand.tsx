@@ -46,7 +46,7 @@ export function Brand({
       <span className="flex flex-col leading-tight">
         {withWordmark && (
           <span className="font-heading text-lg font-bold tracking-tight">
-            eDoctor Place
+            e-Doctor TIM Marketplace
           </span>
         )}
         {/*

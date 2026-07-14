@@ -245,7 +245,7 @@ export async function submitOrder(raw: unknown): Promise<SubmitOrderResult> {
     const receipt = await resend.emails.send({
       from,
       to: [order.customer.email],
-      subject: `Votre commande ${reference} chez eDoctor Place`,
+      subject: `Votre commande ${reference} chez e-Doctor TIM Marketplace`,
       html: receiptHtml,
     });
     if (receipt.error) {

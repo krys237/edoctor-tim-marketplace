@@ -8,7 +8,7 @@ import { formatXaf } from "@/lib/money";
 import { CATEGORY_LABELS, type Category } from "@/lib/schemas";
 
 export const metadata: Metadata = {
-  title: "eDoctor Place — Dispositifs médicaux connectés",
+  title: "e-Doctor TIM Marketplace — Dispositifs médicaux connectés",
   description:
     "Analyseur multiparamétrique, tensiomètre, thermomètre, pèse-personne, saturomètre et bandelettes réactives. Commande en ligne, confirmation par notre équipe.",
 };
