@@ -1,8 +1,10 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 import { Brand } from "@/components/layout/brand";
+import { Link } from "@/i18n/navigation";
 
 export function SiteFooter() {
+  const t = useTranslations("Layout.footer");
   const year = new Date().getFullYear();
 
   return (
@@ -16,36 +18,29 @@ export function SiteFooter() {
               fichier aux tailles reelles d'affichage.
             */}
             <Brand size={96} />
-            <p className="mt-4 max-w-[45ch] text-sm opacity-80">
-              Dispositifs médicaux connectés et consommables. Commande en ligne,
-              traitement par notre équipe.
-            </p>
+            <p className="mt-4 max-w-[45ch] text-sm opacity-80">{t("tagline")}</p>
           </div>
 
-          <nav aria-label="Pied de page">
-            <p className="text-sm font-semibold">Navigation</p>
+          <nav aria-label={t("navLabel")}>
+            <p className="text-sm font-semibold">{t("navTitle")}</p>
             {/* Uniquement des liens vers des pages qui existent. */}
             <ul className="mt-2 space-y-1 text-sm opacity-80">
               <li>
                 <Link href="/produits" className="hover:underline">
-                  Nos produits
+                  {t("products")}
                 </Link>
               </li>
               <li>
                 <Link href="/panier" className="hover:underline">
-                  Votre panier
+                  {t("cart")}
                 </Link>
               </li>
             </ul>
           </nav>
 
           <div>
-            <p className="text-sm font-semibold">Commande</p>
-            <p className="mt-2 max-w-[45ch] text-sm opacity-80">
-              Aucun paiement n&apos;est encaissé en ligne. Notre équipe vous
-              recontacte sous 24 à 48 h ouvrées pour confirmer votre commande, les
-              frais de livraison et le règlement.
-            </p>
+            <p className="text-sm font-semibold">{t("orderTitle")}</p>
+            <p className="mt-2 max-w-[45ch] text-sm opacity-80">{t("orderBody")}</p>
           </div>
         </div>
 
@@ -54,15 +49,10 @@ export function SiteFooter() {
             Avertissement obligatoire sur un site distribuant des dispositifs
             medicaux. Ne pas retirer.
           */}
-          <p className="max-w-[80ch] text-xs opacity-80">
-            Dispositifs médicaux — lisez attentivement la notice avant utilisation.
-            Les informations présentées sur ce site ne remplacent pas l&apos;avis
-            d&apos;un professionnel de santé et ne constituent ni un diagnostic ni
-            une prescription.
-          </p>
+          <p className="max-w-[80ch] text-xs opacity-80">{t("medicalNotice")}</p>
 
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs opacity-70">
-            <p>© {year} e-Doctor TIM Marketplace</p>
+            <p>{t("copyright", { year })}</p>
             {/*
               Attribution imposee par l'EULA de Butler : la licence n'autorise la
               redistribution des fichiers (servir un .woff2 en est une) qu'a la
@@ -70,7 +60,7 @@ export function SiteFooter() {
               Voir app/fonts/LICENSE-Butler.md
             */}
             <p>
-              Police Butler ©{" "}
+              {t("fontCredit")}{" "}
               <a
                 href="https://www.fabiandesmet.com"
                 rel="noopener noreferrer"

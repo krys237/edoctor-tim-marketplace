@@ -1,27 +1,32 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { ProductPurchase } from "@/components/cart/product-purchase";
 import { ProductCard } from "@/components/product/product-card";
+import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
+import { alternates } from "@/lib/alternates";
 import { getAllProducts, getProductById, getProductsByIds } from "@/lib/catalog";
 import { formatXaf } from "@/lib/money";
-import { AVAILABILITY_LABELS, CATEGORY_LABELS } from "@/lib/schemas";
 
-type Params = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ locale: Locale; slug: string }> };
 
-// Le catalogue est statique : on prerend chaque fiche au build.
+// Le catalogue est statique : on prerend chaque fiche au build, dans chaque
+// langue (le segment parent [locale] fournit les locales).
 export function generateStaticParams() {
   return getAllProducts().map((p) => ({ slug: p.id }));
 }
 
-export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const product = getProductById((await params).slug);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const product = getProductById(slug, locale);
   if (!product) return {};
   return {
     title: product.name,
     description: product.shortDescription,
+    alternates: alternates({ pathname: "/produits/[slug]", params: { slug } }),
     openGraph: {
       title: product.name,
       description: product.shortDescription,
@@ -36,11 +41,17 @@ const SCHEMA_AVAILABILITY: Record<string, string> = {
   discontinued: "https://schema.org/Discontinued",
 };
 
-export default async function ProduitPage({ params }: Params) {
-  const product = getProductById((await params).slug);
+export default async function ProduitPage({ params }: Props) {
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
+
+  const product = getProductById(slug, locale);
   if (!product) notFound();
 
-  const related = getProductsByIds(product.relatedProductIds);
+  const t = await getTranslations("Product");
+  const tCatalog = await getTranslations("Catalog");
+
+  const related = getProductsByIds(product.relatedProductIds, locale);
 
   // Donnees structurees : fait apparaitre prix et disponibilite dans Google.
   const jsonLd = {
@@ -72,18 +83,18 @@ export default async function ProduitPage({ params }: Params) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <nav aria-label="Fil d'Ariane" className="text-muted-foreground mb-6 text-sm">
+      <nav aria-label={t("breadcrumb")} className="text-muted-foreground mb-6 text-sm">
         <Link href="/produits" className="hover:text-foreground underline">
-          Nos produits
+          {t("allProducts")}
         </Link>
         <span aria-hidden className="mx-2">
           /
         </span>
         <Link
-          href={`/produits?categorie=${product.category}`}
+          href={{ pathname: "/produits", query: { categorie: product.category } }}
           className="hover:text-foreground underline"
         >
-          {CATEGORY_LABELS[product.category]}
+          {tCatalog(`categories.${product.category}`)}
         </Link>
         <span aria-hidden className="mx-2">
           /
@@ -110,14 +121,12 @@ export default async function ProduitPage({ params }: Params) {
           <p className="text-muted-foreground mt-1">{product.brand}</p>
 
           <p className="tabular-price mt-4 text-3xl font-bold">
-            {formatXaf(product.price)}
+            {formatXaf(product.price, locale)}
           </p>
-          <p className="text-muted-foreground mt-1 text-sm">
-            Frais de livraison communiqués à la confirmation.
-          </p>
+          <p className="text-muted-foreground mt-1 text-sm">{t("shippingNote")}</p>
 
           <p className="mt-4 text-sm font-medium">
-            {AVAILABILITY_LABELS[product.availability]}
+            {tCatalog(`availability.${product.availability}`)}
           </p>
 
           <ProductPurchase
@@ -128,10 +137,7 @@ export default async function ProduitPage({ params }: Params) {
 
           {product.requiresConsumable && (
             <div className="border-accent bg-accent/10 mt-4 rounded-md border-l-4 p-3">
-              <p className="text-sm font-medium">
-                La commande de cet appareil exige au moins un pack de bandelettes
-                réactives.
-              </p>
+              <p className="text-sm font-medium">{t("requiresStrips")}</p>
             </div>
           )}
 
@@ -143,7 +149,7 @@ export default async function ProduitPage({ params }: Params) {
 
           {product.specs.length > 0 && (
             <>
-              <h2 className="mt-8 text-xl">Caractéristiques techniques</h2>
+              <h2 className="mt-8 text-xl">{t("specsTitle")}</h2>
               <dl className="mt-3 divide-y border-t">
                 {product.specs.map((spec) => (
                   <div key={spec.label} className="grid grid-cols-3 gap-4 py-2.5">
@@ -160,32 +166,25 @@ export default async function ProduitPage({ params }: Params) {
             « marquage CE » sans source serait une allegation juridique.
           */}
           <div className="bg-muted mt-8 rounded-md p-4">
-            <h2 className="text-base">Informations réglementaires</h2>
+            <h2 className="text-base">{t("regulatory.title")}</h2>
             {hasRegulatoryData ? (
               <dl className="mt-2 space-y-1 text-sm">
                 {product.medical.deviceClass && (
                   <div>
-                    <dt className="inline text-muted-foreground">Classe : </dt>
+                    <dt className="inline text-muted-foreground">{t("regulatory.class")}</dt>
                     <dd className="inline">{product.medical.deviceClass}</dd>
                   </div>
                 )}
                 {product.medical.noticeUrl && (
                   <a href={product.medical.noticeUrl} className="underline">
-                    Notice d&apos;utilisation (PDF)
+                    {t("regulatory.notice")}
                   </a>
                 )}
               </dl>
             ) : (
-              <p className="text-muted-foreground mt-2 text-sm">
-                Les informations réglementaires de ce produit (marquage CE, classe du
-                dispositif, notice) seront publiées prochainement. Contactez notre
-                support pour les obtenir avant achat.
-              </p>
+              <p className="text-muted-foreground mt-2 text-sm">{t("regulatory.pending")}</p>
             )}
-            <p className="text-muted-foreground mt-3 text-xs">
-              Dispositif médical — lisez attentivement la notice. Ces informations ne
-              remplacent pas l&apos;avis d&apos;un professionnel de santé.
-            </p>
+            <p className="text-muted-foreground mt-3 text-xs">{t("regulatory.disclaimer")}</p>
           </div>
         </div>
       </div>
@@ -193,7 +192,7 @@ export default async function ProduitPage({ params }: Params) {
       {related.length > 0 && (
         <section className="mt-14">
           <h2 className="text-2xl">
-            {product.requiresConsumable ? "Bandelettes compatibles" : "Appareil compatible"}
+            {product.requiresConsumable ? t("related.strips") : t("related.device")}
           </h2>
           <ul className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {related.map((p) => (

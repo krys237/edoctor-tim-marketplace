@@ -1,12 +1,14 @@
 "use client";
 
 import { ShoppingCart } from "lucide-react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 import { totalQuantity } from "@/lib/cart-rules";
 import { useCart } from "@/lib/cart-store";
+import { Link } from "@/i18n/navigation";
 
 export function CartBadge() {
+  const t = useTranslations("Layout.header");
   const items = useCart((s) => s.items);
   const hydrated = useCart((s) => s.hydrated);
   const count = totalQuantity(items);
@@ -27,14 +29,18 @@ export function CartBadge() {
     >
       {/* Decorative : le mot « Panier » porte deja le sens pour un lecteur d'ecran. */}
       <ShoppingCart aria-hidden className="size-5 shrink-0" strokeWidth={2} />
-      Panier
+      {/*
+        Sous 640 px, le mot passe en lecteur d'ecran seulement : l'icone et le
+        compteur suffisent, et l'en-tete mobile n'a pas la place pour « Panier ».
+      */}
+      <span className="max-sm:sr-only">{t("cart")}</span>
       {showCount && (
         <span className="bg-accent text-accent-foreground tabular-price inline-flex min-w-6 items-center justify-center rounded-full px-1.5 py-0.5 text-xs font-bold">
           {count}
         </span>
       )}
       <span className="sr-only" aria-live="polite">
-        {showCount ? `${count} article${count > 1 ? "s" : ""} dans le panier` : "Panier vide"}
+        {showCount ? t("cartCount", { count }) : t("cartEmpty")}
       </span>
     </Link>
   );

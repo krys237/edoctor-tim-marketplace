@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import type { Locale } from "@/i18n/routing";
 import type { Xaf } from "@/lib/money";
 
 /*
@@ -100,6 +101,13 @@ export type OrderLine = {
 export type Order = {
   reference: string;
   submittedAt: string;
+  /**
+   * Langue de la page depuis laquelle la commande a ete passee. Determinee
+   * cote SERVEUR (jamais envoyee par le navigateur) : elle choisit la langue
+   * de l'accuse de reception et indique au support dans quelle langue
+   * rappeler le client.
+   */
+  locale: Locale;
   customer: OrderInput["customer"];
   business?: { companyName: string; taxId?: string };
   fulfillment: OrderInput["fulfillment"] & { locationLabel?: string };

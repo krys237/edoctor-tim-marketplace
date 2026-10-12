@@ -1,9 +1,10 @@
 import Image from "next/image";
-import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
 
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
+import { Link } from "@/i18n/navigation";
 import { formatXaf } from "@/lib/money";
-import { AVAILABILITY_LABELS, type Product } from "@/lib/schemas";
+import type { Product } from "@/lib/schemas";
 
 const AVAILABILITY_DOT: Record<Product["availability"], string> = {
   in_stock: "bg-success",
@@ -35,7 +36,9 @@ export function ProductCard({
   eager?: boolean;
   lcpCandidate?: boolean;
 }) {
-  const href = `/produits/${product.id}`;
+  const t = useTranslations("Product");
+  const tCatalog = useTranslations("Catalog");
+  const locale = useLocale();
 
   return (
     /*
@@ -62,7 +65,10 @@ export function ProductCard({
           Le lien couvre toute la carte via ::after, mais seul le titre est
           annonce au lecteur d'ecran : pas de lien vide en double.
         */}
-        <Link href={href} className="after:absolute after:inset-0">
+        <Link
+          href={{ pathname: "/produits/[slug]", params: { slug: product.id } }}
+          className="after:absolute after:inset-0"
+        >
           {product.name}
         </Link>
       </h3>
@@ -75,7 +81,7 @@ export function ProductCard({
 
       <div className="mt-3 flex flex-wrap items-baseline gap-x-2 gap-y-1">
         <span className="tabular-price text-lg font-bold whitespace-nowrap">
-          {formatXaf(product.price)}
+          {formatXaf(product.price, locale)}
         </span>
       </div>
 
@@ -87,13 +93,11 @@ export function ProductCard({
           aria-hidden
           className={`size-1.5 rounded-full ${AVAILABILITY_DOT[product.availability]}`}
         />
-        {AVAILABILITY_LABELS[product.availability]}
+        {tCatalog(`availability.${product.availability}`)}
       </span>
 
       {product.requiresConsumable && (
-        <p className="text-muted-foreground mt-2 text-xs">
-          Nécessite au moins un pack de bandelettes.
-        </p>
+        <p className="text-muted-foreground mt-2 text-xs">{t("cardRequiresStrips")}</p>
       )}
 
       {/*

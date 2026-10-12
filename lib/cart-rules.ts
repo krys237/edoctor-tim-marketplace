@@ -5,9 +5,12 @@ import type { Product } from "@/lib/schemas";
  * Regles metier du panier.
  *
  * Ce module est volontairement PUR : aucune directive "use client", aucun acces
- * au stockage. Il est consomme par l'interface du panier ET devra l'etre par la
- * Server Action de commande. Une regle validee uniquement dans le navigateur
- * n'est pas une regle : c'est une suggestion.
+ * au stockage, aucun texte destine a l'utilisateur. Il est consomme par
+ * l'interface du panier ET par la Server Action de commande. Une regle validee
+ * uniquement dans le navigateur n'est pas une regle : c'est une suggestion.
+ *
+ * Les violations sont des CODES, pas des phrases : c'est l'appelant qui les
+ * traduit (`Cart.violations.*` cote navigateur, `Errors.*` cote serveur).
  */
 
 export type ResolvedLine = {
@@ -17,8 +20,10 @@ export type ResolvedLine = {
 };
 
 export type CartViolation = {
+  code: "requires-consumable";
   productId: string;
-  message: string;
+  /** Nom du produit dans la langue du catalogue resolu, pour le message. */
+  productName: string;
 };
 
 /**
@@ -60,8 +65,9 @@ export function cartViolations(lines: ResolvedLine[]): CartViolation[] {
     .filter((l) => l.product.requiresConsumable)
     .filter((l) => !l.product.relatedProductIds.some((id) => present.has(id)))
     .map((l) => ({
+      code: "requires-consumable" as const,
       productId: l.product.id,
-      message: `« ${l.product.name} » ne peut pas être commandé seul : ajoutez au moins un pack de bandelettes réactives.`,
+      productName: l.product.name,
     }));
 }
 

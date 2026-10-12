@@ -17,6 +17,7 @@ function makeOrder(doctor: boolean, promoPercent?: number): Order {
   return {
     reference: "CMD-20260709-A3F2",
     submittedAt: "2026-07-09T12:00:00.000Z",
+    locale: "fr",
     customer: {
       // Tentative d'injection : React doit l'echapper.
       fullName: '<img src=x onerror="alert(1)">Germann',
@@ -78,6 +79,18 @@ async function main() {
     const htmlDoctor = digits(await render(OrderReceiptEmail({ order: makeOrder(true) })));
     check("l'accuse client n'expose pas le sous-total public", !htmlDoctor.includes("publicSubtotal"));
     check("l'accuse client affiche le prix paye (9900)", htmlDoctor.includes("9900FCFA"));
+  }
+
+  console.log("\n=== Email CLIENT en anglais (order.locale = en) ===");
+  {
+    const order = { ...makeOrder(false, 30), locale: "en" as const };
+    const raw = await render(OrderReceiptEmail({ order }));
+    const html = digits(raw);
+    check("document en anglais", raw.includes('lang="en"'));
+    check("mention 'not yet confirmed'", html.includes("notyetconfirmed"));
+    check("aucun texte francais residuel", !html.includes("Sous-total"));
+    check("montant formate a l'anglaise (21,000 FCFA)", html.includes("21,000FCFA"));
+    check("avertissement dispositif medical", html.includes("Medicaldevices"));
   }
 
   console.log("\n=== Code promo : le montant facture doit etre le montant remise ===");

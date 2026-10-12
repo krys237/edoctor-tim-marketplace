@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 /**
  * Mention accompagnant le logo. Reprise telle quelle de la demande client.
@@ -15,6 +16,13 @@ type Props = {
   /** Affiche le nom du site a cote du logo. */
   withWordmark?: boolean;
   /**
+   * Sous 640 px, ne garde que le logo. Dans l'en-tete mobile, « e-Doctor TIM
+   * Marketplace » s'etalait sur trois lignes et, meme reduit a la mention
+   * DMI-D/P, le bloc poussait le panier hors de l'ecran (409 px pour 371).
+   * Le pied de page, lui, affiche toujours la marque complete.
+   */
+  compact?: boolean;
+  /**
    * Le logo est-il porteur d'information ? Faux quand un titre voisin donne
    * deja le nom de la marque : l'annoncer deux fois encombre le lecteur d'ecran.
    */
@@ -25,9 +33,12 @@ type Props = {
 export function Brand({
   size = 44,
   withWordmark = true,
+  compact = false,
   decorative = false,
   className = "",
 }: Props) {
+  const t = useTranslations("Brand");
+
   return (
     <span className={`flex items-center gap-3 ${className}`}>
       <Image
@@ -36,14 +47,14 @@ export function Brand({
         // et evitent l'avertissement de next/image sur les dimensions.
         width={size}
         height={size}
-        alt={decorative ? "" : "e-Dr TIM — Dossier médical informatisé"}
+        alt={decorative ? "" : t("logoAlt")}
         aria-hidden={decorative || undefined}
         // Present dans l'en-tete de chaque page, toujours au-dessus de la ligne
         // de flottaison : le charger en differe n'a aucun sens.
         loading="eager"
       />
 
-      <span className="flex flex-col leading-tight">
+      <span className={`flex-col leading-tight ${compact ? "hidden sm:flex" : "flex"}`}>
         {withWordmark && (
           <span className="font-heading text-lg font-bold tracking-tight">
             e-Doctor TIM Marketplace

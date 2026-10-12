@@ -2,6 +2,7 @@
 
 import { render } from "@react-email/render";
 import { headers } from "next/headers";
+import { getLocale } from "next-intl/server";
 import { Resend } from "resend";
 
 import { OrderInternalEmail } from "@/emails/order-internal";
@@ -20,6 +21,7 @@ import { getPickupLocation, pickupAvailable } from "@/lib/pickup";
 import { isValidDoctorCode, priceFor } from "@/lib/pricing-doctor";
 import { findPromo } from "@/lib/promo";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { emailTranslator, errorsTranslator } from "@/lib/translator";
 import { verifyTurnstile } from "@/lib/turnstile";
 
 /*
@@ -52,12 +54,20 @@ async function clientIp(): Promise<string> {
 }
 
 export async function submitOrder(raw: unknown): Promise<SubmitOrderResult> {
+  /*
+    Langue de la page appelante, posee par le proxy sur la requete de l'action.
+    Elle ne vient PAS du payload : le navigateur ne choisit pas la langue des
+    messages d'erreur ni de l'accuse de reception, la page le fait pour lui.
+  */
+  const locale = await getLocale();
+  const t = errorsTranslator(locale);
+
   // 1. Forme des donnees. Une entree client n'est jamais presumee valide.
   const parsed = OrderInputSchema.safeParse(raw);
   if (!parsed.success) {
     return {
       ok: false,
-      error: "Certains champs sont invalides.",
+      error: t("invalidFields"),
       fieldErrors: parsed.error.flatten().fieldErrors as Record<string, string[]>,
     };
   }
@@ -75,45 +85,42 @@ export async function submitOrder(raw: unknown): Promise<SubmitOrderResult> {
   //    par des requetes que le CAPTCHA aurait de toute facon rejetees.
   const humanOk = await verifyTurnstile(input.turnstileToken ?? "", ip);
   if (!humanOk) {
-    return { ok: false, error: "Vérification anti-robot échouée. Rechargez la page." };
+    return { ok: false, error: t("turnstile") };
   }
 
   const limit = checkRateLimit(ip);
   if (!limit.allowed) {
     return {
       ok: false,
-      error: `Trop de commandes envoyées. Réessayez dans ${Math.ceil(limit.retryAfterSeconds / 60)} minute(s).`,
+      error: t("tooManyOrders", { minutes: Math.ceil(limit.retryAfterSeconds / 60) }),
     };
   }
 
-  // 4. Re-resolution du panier contre le catalogue. Le client n'a envoye que
-  //    des identifiants : les prix, noms et references viennent d'ici.
-  const { lines, droppedIds } = resolveLines(input.items, getProductById);
+  // 4. Re-resolution du panier contre le catalogue, dans la langue du client :
+  //    les noms de produits de l'email suivront. Le client n'a envoye que des
+  //    identifiants : les prix, noms et references viennent d'ici.
+  const { lines, droppedIds } = resolveLines(input.items, (id) => getProductById(id, locale));
   if (lines.length === 0) {
-    return { ok: false, error: "Aucun produit valide dans votre panier." };
+    return { ok: false, error: t("emptyCart") };
   }
   if (droppedIds.length > 0) {
-    return {
-      ok: false,
-      error:
-        "Un produit de votre panier n'est plus disponible. Rechargez la page pour mettre à jour votre panier.",
-    };
+    return { ok: false, error: t("productUnavailable") };
   }
 
   // 5. Regles metier, revalidees serveur. La verification du navigateur n'est
   //    qu'une commodite d'ergonomie ; celle-ci fait foi.
   const violations = cartViolations(lines);
   if (violations.length > 0) {
-    return { ok: false, error: violations[0].message };
+    return { ok: false, error: t("requiresConsumable", { name: violations[0].productName }) };
   }
 
   // 6. Mode de reception.
   if (input.fulfillment.type === "pickup") {
     if (!pickupAvailable()) {
-      return { ok: false, error: "Le retrait en agence n'est pas disponible." };
+      return { ok: false, error: t("pickupUnavailable") };
     }
     if (!getPickupLocation(input.fulfillment.locationId)) {
-      return { ok: false, error: "Point de retrait inconnu." };
+      return { ok: false, error: t("pickupUnknown") };
     }
   }
 
@@ -137,21 +144,18 @@ export async function submitOrder(raw: unknown): Promise<SubmitOrderResult> {
   const promoCodeProvided = Boolean(input.promoCode?.trim());
 
   if (doctorCodeProvided && promoCodeProvided) {
-    return {
-      ok: false,
-      error: "Un code médecin et un code promo ne se cumulent pas. N'en gardez qu'un.",
-    };
+    return { ok: false, error: t("codesExclusive") };
   }
 
   const promo = promoCodeProvided ? findPromo(input.promoCode ?? "") : null;
   if (promoCodeProvided && !promo) {
-    return { ok: false, error: "Ce code promo n'est pas valide." };
+    return { ok: false, error: t("promoInvalid") };
   }
 
   const items: OrderLine[] = [];
   for (const line of lines) {
     const priced = priceFor(line.product.id, doctorCodeApplied);
-    if (!priced) return { ok: false, error: "Erreur de tarification." };
+    if (!priced) return { ok: false, error: t("pricing") };
     items.push({
       productId: line.product.id,
       sku: line.product.sku,
@@ -172,6 +176,7 @@ export async function submitOrder(raw: unknown): Promise<SubmitOrderResult> {
   const order: Order = {
     reference,
     submittedAt: now,
+    locale,
     customer: input.customer,
     business: input.business?.companyName
       ? { companyName: input.business.companyName, taxId: input.business.taxId || undefined }
@@ -202,11 +207,7 @@ export async function submitOrder(raw: unknown): Promise<SubmitOrderResult> {
 
   if (!apiKey || !to || !from) {
     console.error("[commande] Configuration email incomplète : commande NON transmise.");
-    return {
-      ok: false,
-      error:
-        "Le service de commande est momentanément indisponible. Votre panier est conservé, réessayez dans quelques minutes.",
-    };
+    return { ok: false, error: t("serviceUnavailable") };
   }
 
   const resend = new Resend(apiKey);
@@ -217,6 +218,7 @@ export async function submitOrder(raw: unknown): Promise<SubmitOrderResult> {
       render(OrderReceiptEmail({ order })),
     ]);
 
+    // L'email interne reste en francais : c'est la langue de l'equipe support.
     const fulfillmentLabel =
       order.fulfillment.type === "delivery"
         ? `Livraison ${order.fulfillment.city}`
@@ -241,11 +243,11 @@ export async function submitOrder(raw: unknown): Promise<SubmitOrderResult> {
     if (internal.error) throw new Error(internal.error.message);
 
     // L'accuse client est secondaire : son echec ne doit pas perdre la commande,
-    // qui est deja chez le support.
+    // qui est deja chez le support. Il part dans la langue du client.
     const receipt = await resend.emails.send({
       from,
       to: [order.customer.email],
-      subject: `Votre commande ${reference} chez e-Doctor TIM Marketplace`,
+      subject: emailTranslator(locale)("subject", { reference }),
       html: receiptHtml,
     });
     if (receipt.error) {
@@ -253,11 +255,7 @@ export async function submitOrder(raw: unknown): Promise<SubmitOrderResult> {
     }
   } catch (error) {
     console.error(`[commande] Échec d'envoi pour ${reference} :`, error);
-    return {
-      ok: false,
-      error:
-        "Votre commande n'a pas pu être transmise. Votre panier est conservé, réessayez.",
-    };
+    return { ok: false, error: t("sendFailed") };
   }
 
   rememberKey(input.idempotencyKey, reference);

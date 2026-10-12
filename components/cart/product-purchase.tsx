@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
@@ -15,11 +16,12 @@ export function ProductPurchase({
   productName: string;
   disabled?: boolean;
 }) {
+  const t = useTranslations("Product.quantity");
   const [quantity, setQuantity] = useState(1);
 
   return (
     <div className="mt-6 flex flex-wrap items-center gap-3">
-      <QuantityPicker value={quantity} onChange={setQuantity} label="Quantité" />
+      <QuantityPicker value={quantity} onChange={setQuantity} label={t("label")} />
       <div className="min-w-56 flex-1">
         <AddToCartButton
           productId={productId}

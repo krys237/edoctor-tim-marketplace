@@ -1,0 +1,304 @@
+{
+  "Metadata": {
+    "siteName": "e-Doctor TIM Marketplace",
+    "defaultTitle": "e-Doctor TIM Marketplace — Medical equipment",
+    "defaultDescription": "Blood pressure monitors, glucose meters, connected devices and medical consumables. Order online, delivery or pickup.",
+    "home": {
+      "title": "e-Doctor TIM Marketplace — Connected medical devices",
+      "description": "Multi-parameter analyser, blood pressure monitor, thermometer, scale, pulse oximeter and test strips. Order online, confirmed by our team."
+    },
+    "catalog": {
+      "title": "Our products",
+      "description": "Connected medical devices and consumables: multi-parameter analyser, blood pressure monitor, thermometer, scale, pulse oximeter, test strips."
+    },
+    "cart": { "title": "Your cart" },
+    "checkout": { "title": "Your order" },
+    "confirmation": { "title": "Order sent" }
+  },
+
+  "Layout": {
+    "skipLink": "Skip to main content",
+    "header": {
+      "home": "Home",
+      "nav": "Main navigation",
+      "products": "Our products",
+      "cart": "Cart",
+      "cartCount": "{count, plural, one {# item in the cart} other {# items in the cart}}",
+      "cartEmpty": "Cart is empty"
+    },
+    "localeSwitcher": {
+      "label": "Language",
+      "fr": "Français",
+      "en": "English"
+    },
+    "footer": {
+      "tagline": "Connected medical devices and consumables. Order online, processed by our team.",
+      "navTitle": "Navigation",
+      "navLabel": "Footer",
+      "products": "Our products",
+      "cart": "Your cart",
+      "orderTitle": "Ordering",
+      "orderBody": "No payment is taken online. Our team will call you back within 24 to 48 working hours to confirm your order, delivery costs and payment.",
+      "medicalNotice": "Medical devices — read the instructions carefully before use. The information on this site does not replace the advice of a healthcare professional and constitutes neither a diagnosis nor a prescription.",
+      "copyright": "© {year} e-Doctor TIM Marketplace",
+      "fontCredit": "Butler typeface ©"
+    }
+  },
+
+  "Brand": {
+    "logoAlt": "e-Dr TIM — Electronic medical record"
+  },
+
+  "Home": {
+    "hero": {
+      "title": "Measure your health, simply.",
+      "body": "Blood pressure monitors, glucose meters, pulse oximeters and consumables. Connected devices that send every reading to your mobile app.",
+      "ctaProducts": "See our products",
+      "ctaStrips": "Test strips",
+      "noPayment": "No payment is taken online."
+    },
+    "reassurance": {
+      "ariaLabel": "How ordering works",
+      "noPaymentTitle": "No online payment",
+      "noPaymentBody": "You build your order, our team calls you back to confirm it.",
+      "delayTitle": "Reply within 24 to 48 h",
+      "delayBody": "An acknowledgement is sent to you immediately, with your reference.",
+      "connectedTitle": "Connected devices",
+      "connectedBody": "Readings synced with the mobile app, with history and charts."
+    },
+    "categories": {
+      "title": "Our categories",
+      "descriptions": {
+        "dispositifs-connectes": "Measuring devices synced with the mobile app: blood pressure, glucose, temperature, weight, oxygen saturation.",
+        "consommables": "Test strips compatible with the e-Dr Tim device."
+      },
+      "count": "{count, plural, =0 {No products} one {# product} other {# products}}"
+    },
+    "bestSeller": {
+      "badge": "Most requested",
+      "body": "{shortDescription}. Glucose, 3-in-1 profile, β-ketone, total cholesterol and uric acid, depending on the strip used.",
+      "requiresStrips": "Ordering this device requires at least one pack of test strips.",
+      "cta": "View product"
+    },
+    "devices": {
+      "title": "Connected devices",
+      "all": "See the full catalogue"
+    }
+  },
+
+  "Catalog": {
+    "categories": {
+      "dispositifs-connectes": "Connected devices",
+      "consommables": "Consumables"
+    },
+    "availability": {
+      "in_stock": "In stock",
+      "on_order": "On order",
+      "discontinued": "Unavailable"
+    },
+    "title": "Our products",
+    "intro": "Connected medical devices and their consumables. No payment is taken online: our team will call you back to confirm your order.",
+    "search": {
+      "label": "Search for a product",
+      "placeholder": "Blood pressure, test strips, glucose…",
+      "submit": "Search"
+    },
+    "filters": {
+      "ariaLabel": "Filter by category",
+      "all": "All ({count})",
+      "category": "{label} ({count})"
+    },
+    "sort": {
+      "pertinence": "Relevance",
+      "prix-asc": "Price: low to high",
+      "prix-desc": "Price: high to low",
+      "nom": "Name"
+    },
+    "results": "{count, plural, =0 {No products} one {# product} other {# products}}",
+    "resultsFiltered": "{count, plural, =0 {No products match your search} one {# product matching your search} other {# products matching your search}}",
+    "empty": {
+      "title": "No products match.",
+      "body": "Try another term, or reset the filters.",
+      "reset": "Reset filters"
+    }
+  },
+
+  "Product": {
+    "breadcrumb": "Breadcrumb",
+    "allProducts": "Our products",
+    "shippingNote": "Delivery costs are communicated at confirmation.",
+    "requiresStrips": "Ordering this device requires at least one pack of test strips.",
+    "cardRequiresStrips": "Requires at least one pack of test strips.",
+    "specsTitle": "Technical specifications",
+    "regulatory": {
+      "title": "Regulatory information",
+      "class": "Class: ",
+      "notice": "Instructions for use (PDF)",
+      "pending": "The regulatory information for this product (CE marking, device class, instructions) will be published soon. Contact our support to obtain it before purchase.",
+      "disclaimer": "Medical device — read the instructions carefully. This information does not replace the advice of a healthcare professional."
+    },
+    "related": {
+      "strips": "Compatible test strips",
+      "device": "Compatible device"
+    },
+    "quantity": {
+      "label": "Quantity",
+      "decrease": "Decrease quantity",
+      "increase": "Increase quantity"
+    },
+    "addToCart": "Add to cart",
+    "added": "Added to cart",
+    "addedAnnouncement": "{name} added to cart"
+  },
+
+  "Cart": {
+    "title": "Your cart",
+    "loading": "Loading your cart…",
+    "empty": {
+      "title": "Your cart is empty.",
+      "body": "Browse our connected devices and consumables.",
+      "cta": "See products"
+    },
+    "incompleteTitle": "Incomplete order",
+    "violations": {
+      "requiresConsumable": "“{name}” cannot be ordered on its own: add at least one pack of test strips."
+    },
+    "seeStrips": "See test strips",
+    "perUnit": "each",
+    "remove": "Remove",
+    "clear": "Empty the cart",
+    "summary": {
+      "title": "Summary",
+      "subtotal": "Subtotal ({count, plural, one {# item} other {# items}})",
+      "shipping": "Delivery",
+      "shippingValue": "Communicated at confirmation",
+      "noPayment": "No payment is taken online. Our team will call you back within 24 to 48 working hours to confirm your order and delivery costs."
+    },
+    "checkout": "Proceed to checkout",
+    "blocked": "Complete your cart to continue."
+  },
+
+  "Checkout": {
+    "title": "Your order",
+    "intro": "Enter your contact details. No payment is taken online: our support team will contact you to confirm availability, delivery costs and payment.",
+    "loading": "Loading…",
+    "incompleteTitle": "Incomplete order",
+    "required": "*",
+    "contact": {
+      "title": "Your contact details",
+      "fullName": "Full name",
+      "fullNamePlaceholder": "Marie Ngo Bassong",
+      "email": "Email",
+      "emailPlaceholder": "marie.bassong@example.cm",
+      "phone": "Phone",
+      "phonePlaceholder": "6 99 00 11 22"
+    },
+    "fulfillment": {
+      "title": "Delivery method",
+      "legend": "Choose a delivery method",
+      "delivery": "Delivery",
+      "pickup": "Pickup at a branch",
+      "pickupUnavailable": "Pickup at a branch is not yet available online. Contact our support if you wish to collect your order.",
+      "addressLine1": "Address",
+      "addressLine1Placeholder": "Rue 1.234, Bonapriso",
+      "addressLine2": "Address line 2",
+      "addressLine2Placeholder": "Les Palmiers building, 2nd floor",
+      "city": "City or district",
+      "cityPlaceholder": "Douala",
+      "instructions": "Delivery instructions (floor, landmark, hours)",
+      "instructionsPlaceholder": "Blue gate opposite the pharmacy, call on arrival",
+      "location": "Pickup point",
+      "locationPlaceholder": "Choose…"
+    },
+    "business": {
+      "title": "Healthcare facility (optional)",
+      "intro": "Fill in these fields if you are ordering on behalf of a clinic, a pharmacy or a laboratory.",
+      "companyName": "Company name",
+      "companyNamePlaceholder": "Clinique de la Cité",
+      "taxId": "Tax identification number",
+      "taxIdPlaceholder": "As shown on your certificate"
+    },
+    "doctorCode": {
+      "title": "Doctor code (optional)",
+      "label": "Your code",
+      "placeholder": "Code provided by eDoctor",
+      "hint": "If your code is valid, the practitioner rate is applied when your order is confirmed."
+    },
+    "summary": {
+      "title": "Summary",
+      "line": "{quantity} × {name}",
+      "subtotal": "Subtotal",
+      "promoLine": "Code {code} (−{percent}%)",
+      "netSubtotal": "Subtotal after discount",
+      "shipping": "Delivery",
+      "shippingValue": "Communicated at confirmation"
+    },
+    "promo": {
+      "title": "Promo code",
+      "blocked": "A doctor code has been entered. The practitioner rate and a promo code cannot be combined: clear the “Doctor code” field to use a promo code.",
+      "applied": "{code} applied (−{percent}%)",
+      "remove": "Remove",
+      "label": "Your promo code",
+      "placeholder": "Your code",
+      "apply": "Apply",
+      "checking": "Checking…"
+    },
+    "consent": "I agree that my data may be used to process this order, in accordance with the privacy policy.",
+    "submit": "Send my order",
+    "submitting": "Sending…",
+    "noPayment": "No payment is taken online. Our team will call you back within 24 to 48 working hours.",
+    "validation": {
+      "fullName": "Enter your full name.",
+      "email": "Invalid email address.",
+      "phoneFormat": "Invalid phone number.",
+      "phoneLength": "A Cameroonian number has {digits} digits.",
+      "addressLine1": "Address required.",
+      "city": "City or district required.",
+      "locationId": "Choose a pickup point.",
+      "consent": "You must accept the privacy policy."
+    }
+  },
+
+  "Confirmation": {
+    "status": "Order sent",
+    "heading": "Thank you, we have received your request.",
+    "referenceLabel": "Your order reference:",
+    "notConfirmedTitle": "Your order is not yet confirmed.",
+    "notConfirmedBody": "No payment has been made. Our team will contact you within 24 to 48 working hours to confirm product availability, delivery costs and payment terms.",
+    "receiptNote": "An acknowledgement has just been sent to you by email. Keep your reference: our support team will ask for it.",
+    "back": "Back to products"
+  },
+
+  "Errors": {
+    "invalidFields": "Some fields are invalid.",
+    "turnstile": "Anti-robot check failed. Reload the page.",
+    "tooManyOrders": "Too many orders sent. Try again in {minutes, plural, one {# minute} other {# minutes}}.",
+    "tooManyAttempts": "Too many attempts. Try again in {minutes, plural, one {# minute} other {# minutes}}.",
+    "emptyCart": "No valid product in your cart.",
+    "productUnavailable": "A product in your cart is no longer available. Reload the page to update your cart.",
+    "requiresConsumable": "“{name}” cannot be ordered on its own: add at least one pack of test strips.",
+    "pickupUnavailable": "Pickup at a branch is not available.",
+    "pickupUnknown": "Unknown pickup point.",
+    "codesExclusive": "A doctor code and a promo code cannot be combined. Keep only one.",
+    "promoInvalid": "This promo code is not valid.",
+    "promoRequired": "Enter a promo code.",
+    "pricing": "Pricing error.",
+    "serviceUnavailable": "The ordering service is temporarily unavailable. Your cart has been kept, try again in a few minutes.",
+    "sendFailed": "Your order could not be sent. Your cart has been kept, please try again."
+  },
+
+  "EmailReceipt": {
+    "subject": "Your order {reference} at e-Doctor TIM Marketplace",
+    "preview": "We have received your request {reference}",
+    "greeting": "Thank you, {firstName}.",
+    "intro": "We have received your order request. Your reference is <strong>{reference}</strong>. Keep it, our support team will ask for it.",
+    "warning": "<strong>This order is not yet confirmed</strong> and no payment has been made. Our team will contact you within 24 to 48 working hours to confirm availability, delivery costs and payment.",
+    "selectionTitle": "Your selection",
+    "line": "{quantity} × {name} — {amount}",
+    "subtotal": "Subtotal: {amount}",
+    "promoLine": "Promo code {code} (−{percent}%): −{amount}",
+    "netSubtotal": "Subtotal: {amount}",
+    "shippingNote": "Delivery costs will be communicated at confirmation.",
+    "medicalNotice": "Medical devices — read the instructions carefully before use. This information does not replace the advice of a healthcare professional."
+  }
+}

@@ -1,10 +1,12 @@
 "use server";
 
 import { headers } from "next/headers";
+import { getLocale } from "next-intl/server";
 import { z } from "zod";
 
 import { findPromo } from "@/lib/promo";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { errorsTranslator } from "@/lib/translator";
 
 /*
   Verification d'un code promo, sans jamais reveler la liste.
@@ -31,9 +33,12 @@ async function clientIp(): Promise<string> {
 }
 
 export async function validatePromo(raw: unknown): Promise<ValidatePromoResult> {
+  // Langue de la page appelante, posee par le proxy : les erreurs la suivent.
+  const t = errorsTranslator(await getLocale());
+
   const parsed = CandidateSchema.safeParse(raw);
   if (!parsed.success) {
-    return { ok: false, error: "Saisissez un code promo." };
+    return { ok: false, error: t("promoRequired") };
   }
 
   const ip = await clientIp();
@@ -41,13 +46,13 @@ export async function validatePromo(raw: unknown): Promise<ValidatePromoResult> 
   if (!limit.allowed) {
     return {
       ok: false,
-      error: `Trop d'essais. Réessayez dans ${Math.ceil(limit.retryAfterSeconds / 60)} minute(s).`,
+      error: t("tooManyAttempts", { minutes: Math.ceil(limit.retryAfterSeconds / 60) }),
     };
   }
 
   const promo = findPromo(parsed.data);
   if (!promo) {
-    return { ok: false, error: "Ce code promo n'est pas valide." };
+    return { ok: false, error: t("promoInvalid") };
   }
 
   return { ok: true, code: promo.code, percent: promo.percent };

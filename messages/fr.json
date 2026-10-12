@@ -1,0 +1,304 @@
+{
+  "Metadata": {
+    "siteName": "e-Doctor TIM Marketplace",
+    "defaultTitle": "e-Doctor TIM Marketplace — Equipements medicaux",
+    "defaultDescription": "Tensiomètres, glucomètres, dispositifs connectés et consommables médicaux. Commande en ligne, livraison ou retrait.",
+    "home": {
+      "title": "e-Doctor TIM Marketplace — Dispositifs médicaux connectés",
+      "description": "Analyseur multiparamétrique, tensiomètre, thermomètre, pèse-personne, saturomètre et bandelettes réactives. Commande en ligne, confirmation par notre équipe."
+    },
+    "catalog": {
+      "title": "Nos produits",
+      "description": "Dispositifs médicaux connectés et consommables : analyseur multiparamétrique, tensiomètre, thermomètre, pèse-personne, saturomètre, bandelettes réactives."
+    },
+    "cart": { "title": "Votre panier" },
+    "checkout": { "title": "Votre commande" },
+    "confirmation": { "title": "Commande envoyée" }
+  },
+
+  "Layout": {
+    "skipLink": "Aller au contenu principal",
+    "header": {
+      "home": "Accueil",
+      "nav": "Navigation principale",
+      "products": "Nos produits",
+      "cart": "Panier",
+      "cartCount": "{count, plural, one {# article dans le panier} other {# articles dans le panier}}",
+      "cartEmpty": "Panier vide"
+    },
+    "localeSwitcher": {
+      "label": "Langue",
+      "fr": "Français",
+      "en": "English"
+    },
+    "footer": {
+      "tagline": "Dispositifs médicaux connectés et consommables. Commande en ligne, traitement par notre équipe.",
+      "navTitle": "Navigation",
+      "navLabel": "Pied de page",
+      "products": "Nos produits",
+      "cart": "Votre panier",
+      "orderTitle": "Commande",
+      "orderBody": "Aucun paiement n'est encaissé en ligne. Notre équipe vous recontacte sous 24 à 48 h ouvrées pour confirmer votre commande, les frais de livraison et le règlement.",
+      "medicalNotice": "Dispositifs médicaux — lisez attentivement la notice avant utilisation. Les informations présentées sur ce site ne remplacent pas l'avis d'un professionnel de santé et ne constituent ni un diagnostic ni une prescription.",
+      "copyright": "© {year} e-Doctor TIM Marketplace",
+      "fontCredit": "Police Butler ©"
+    }
+  },
+
+  "Brand": {
+    "logoAlt": "e-Dr TIM — Dossier médical informatisé"
+  },
+
+  "Home": {
+    "hero": {
+      "title": "Mesurer sa santé, simplement.",
+      "body": "Tensiomètres, glucomètres, saturomètres et consommables. Des appareils connectés qui transmettent chaque mesure à votre application mobile.",
+      "ctaProducts": "Voir nos produits",
+      "ctaStrips": "Bandelettes réactives",
+      "noPayment": "Aucun paiement n'est encaissé en ligne."
+    },
+    "reassurance": {
+      "ariaLabel": "Comment fonctionne la commande",
+      "noPaymentTitle": "Aucun paiement en ligne",
+      "noPaymentBody": "Vous composez votre commande, notre équipe vous rappelle pour la confirmer.",
+      "delayTitle": "Réponse sous 24 à 48 h",
+      "delayBody": "Un accusé de réception vous est envoyé immédiatement, avec votre référence.",
+      "connectedTitle": "Appareils connectés",
+      "connectedBody": "Mesures synchronisées avec l'application mobile, historique et courbes."
+    },
+    "categories": {
+      "title": "Nos catégories",
+      "descriptions": {
+        "dispositifs-connectes": "Appareils de mesure synchronisés avec l'application mobile : tension, glycémie, température, poids, saturation.",
+        "consommables": "Bandelettes réactives compatibles avec l'appareil e-Dr Tim."
+      },
+      "count": "{count, plural, =0 {Aucun produit} one {# produit} other {# produits}}"
+    },
+    "bestSeller": {
+      "badge": "Le plus demandé",
+      "body": "{shortDescription}. Glycémie, profil 3-en-1, β-cétone, cholestérol total et acide urique, selon la bandelette utilisée.",
+      "requiresStrips": "La commande de cet appareil exige au moins un pack de bandelettes réactives.",
+      "cta": "Voir la fiche produit"
+    },
+    "devices": {
+      "title": "Dispositifs connectés",
+      "all": "Voir tout le catalogue"
+    }
+  },
+
+  "Catalog": {
+    "categories": {
+      "dispositifs-connectes": "Dispositifs connectés",
+      "consommables": "Consommables"
+    },
+    "availability": {
+      "in_stock": "En stock",
+      "on_order": "Sur commande",
+      "discontinued": "Non disponible"
+    },
+    "title": "Nos produits",
+    "intro": "Dispositifs médicaux connectés et consommables associés. Aucun paiement n'est encaissé en ligne : notre équipe vous recontacte pour confirmer votre commande.",
+    "search": {
+      "label": "Rechercher un produit",
+      "placeholder": "Tensiomètre, bandelettes, glycémie…",
+      "submit": "Rechercher"
+    },
+    "filters": {
+      "ariaLabel": "Filtrer par catégorie",
+      "all": "Tout ({count})",
+      "category": "{label} ({count})"
+    },
+    "sort": {
+      "pertinence": "Pertinence",
+      "prix-asc": "Prix croissant",
+      "prix-desc": "Prix décroissant",
+      "nom": "Nom"
+    },
+    "results": "{count, plural, =0 {Aucun produit} one {# produit} other {# produits}}",
+    "resultsFiltered": "{count, plural, =0 {Aucun produit ne correspond à votre recherche} one {# produit correspondant à votre recherche} other {# produits correspondant à votre recherche}}",
+    "empty": {
+      "title": "Aucun produit ne correspond.",
+      "body": "Essayez un autre terme, ou réinitialisez les filtres.",
+      "reset": "Réinitialiser les filtres"
+    }
+  },
+
+  "Product": {
+    "breadcrumb": "Fil d'Ariane",
+    "allProducts": "Nos produits",
+    "shippingNote": "Frais de livraison communiqués à la confirmation.",
+    "requiresStrips": "La commande de cet appareil exige au moins un pack de bandelettes réactives.",
+    "cardRequiresStrips": "Nécessite au moins un pack de bandelettes.",
+    "specsTitle": "Caractéristiques techniques",
+    "regulatory": {
+      "title": "Informations réglementaires",
+      "class": "Classe : ",
+      "notice": "Notice d'utilisation (PDF)",
+      "pending": "Les informations réglementaires de ce produit (marquage CE, classe du dispositif, notice) seront publiées prochainement. Contactez notre support pour les obtenir avant achat.",
+      "disclaimer": "Dispositif médical — lisez attentivement la notice. Ces informations ne remplacent pas l'avis d'un professionnel de santé."
+    },
+    "related": {
+      "strips": "Bandelettes compatibles",
+      "device": "Appareil compatible"
+    },
+    "quantity": {
+      "label": "Quantité",
+      "decrease": "Diminuer la quantité",
+      "increase": "Augmenter la quantité"
+    },
+    "addToCart": "Ajouter au panier",
+    "added": "Ajouté au panier",
+    "addedAnnouncement": "{name} ajouté au panier"
+  },
+
+  "Cart": {
+    "title": "Votre panier",
+    "loading": "Chargement de votre panier…",
+    "empty": {
+      "title": "Votre panier est vide.",
+      "body": "Parcourez nos dispositifs connectés et consommables.",
+      "cta": "Voir les produits"
+    },
+    "incompleteTitle": "Commande incomplète",
+    "violations": {
+      "requiresConsumable": "« {name} » ne peut pas être commandé seul : ajoutez au moins un pack de bandelettes réactives."
+    },
+    "seeStrips": "Voir les bandelettes",
+    "perUnit": "l'unité",
+    "remove": "Retirer",
+    "clear": "Vider le panier",
+    "summary": {
+      "title": "Récapitulatif",
+      "subtotal": "Sous-total ({count, plural, one {# article} other {# articles}})",
+      "shipping": "Livraison",
+      "shippingValue": "Communiquée à la confirmation",
+      "noPayment": "Aucun paiement n'est encaissé en ligne. Notre équipe vous recontacte sous 24 à 48 h ouvrées pour confirmer votre commande et les frais de livraison."
+    },
+    "checkout": "Passer la commande",
+    "blocked": "Complétez votre panier pour continuer."
+  },
+
+  "Checkout": {
+    "title": "Votre commande",
+    "intro": "Renseignez vos coordonnées. Aucun paiement n'est encaissé en ligne : notre support vous contacte pour confirmer la disponibilité, les frais de livraison et le règlement.",
+    "loading": "Chargement…",
+    "incompleteTitle": "Commande incomplète",
+    "required": "*",
+    "contact": {
+      "title": "Vos coordonnées",
+      "fullName": "Nom complet",
+      "fullNamePlaceholder": "Marie Ngo Bassong",
+      "email": "Email",
+      "emailPlaceholder": "marie.bassong@exemple.cm",
+      "phone": "Téléphone",
+      "phonePlaceholder": "6 99 00 11 22"
+    },
+    "fulfillment": {
+      "title": "Mode de réception",
+      "legend": "Choisissez un mode de réception",
+      "delivery": "Livraison",
+      "pickup": "Retrait en agence",
+      "pickupUnavailable": "Le retrait en agence n'est pas encore disponible en ligne. Contactez notre support si vous souhaitez retirer votre commande.",
+      "addressLine1": "Adresse",
+      "addressLine1Placeholder": "Rue 1.234, Bonapriso",
+      "addressLine2": "Complément d'adresse",
+      "addressLine2Placeholder": "Immeuble Les Palmiers, 2e étage",
+      "city": "Ville ou quartier",
+      "cityPlaceholder": "Douala",
+      "instructions": "Instructions de livraison (étage, repère, horaires)",
+      "instructionsPlaceholder": "Portail bleu en face de la pharmacie, appeler en arrivant",
+      "location": "Point de retrait",
+      "locationPlaceholder": "Choisissez…"
+    },
+    "business": {
+      "title": "Structure de santé (facultatif)",
+      "intro": "Renseignez ces champs si vous commandez au nom d'une clinique, d'une pharmacie ou d'un laboratoire.",
+      "companyName": "Raison sociale",
+      "companyNamePlaceholder": "Clinique de la Cité",
+      "taxId": "Numéro d'identifiant fiscal",
+      "taxIdPlaceholder": "Tel qu'il figure sur votre attestation"
+    },
+    "doctorCode": {
+      "title": "Code médecin (facultatif)",
+      "label": "Votre code",
+      "placeholder": "Code remis par eDoctor",
+      "hint": "Si votre code est valide, le tarif praticien est appliqué à la confirmation de votre commande."
+    },
+    "summary": {
+      "title": "Récapitulatif",
+      "line": "{quantity} × {name}",
+      "subtotal": "Sous-total",
+      "promoLine": "Code {code} (−{percent} %)",
+      "netSubtotal": "Sous-total après remise",
+      "shipping": "Livraison",
+      "shippingValue": "Communiquée à la confirmation"
+    },
+    "promo": {
+      "title": "Code promo",
+      "blocked": "Un code médecin est saisi. Le tarif praticien et un code promo ne se cumulent pas : videz le champ « Code médecin » pour utiliser un code promo.",
+      "applied": "{code} appliqué (−{percent} %)",
+      "remove": "Retirer",
+      "label": "Votre code promo",
+      "placeholder": "Votre code",
+      "apply": "Appliquer",
+      "checking": "Vérification…"
+    },
+    "consent": "J'accepte que mes données soient utilisées pour traiter cette commande, conformément à la politique de confidentialité.",
+    "submit": "Envoyer ma commande",
+    "submitting": "Envoi en cours…",
+    "noPayment": "Aucun paiement n'est encaissé en ligne. Notre équipe vous recontacte sous 24 à 48 h ouvrées.",
+    "validation": {
+      "fullName": "Indiquez votre nom complet.",
+      "email": "Adresse email invalide.",
+      "phoneFormat": "Numéro de téléphone invalide.",
+      "phoneLength": "Un numéro camerounais compte {digits} chiffres.",
+      "addressLine1": "Adresse requise.",
+      "city": "Ville ou quartier requis.",
+      "locationId": "Choisissez un point de retrait.",
+      "consent": "Vous devez accepter la politique de confidentialité."
+    }
+  },
+
+  "Confirmation": {
+    "status": "Commande envoyée",
+    "heading": "Merci, nous avons bien reçu votre demande.",
+    "referenceLabel": "Votre référence de commande :",
+    "notConfirmedTitle": "Votre commande n'est pas encore confirmée.",
+    "notConfirmedBody": "Aucun paiement n'a été effectué. Notre équipe vous contacte sous 24 à 48 h ouvrées pour confirmer la disponibilité des produits, les frais de livraison et les modalités de règlement.",
+    "receiptNote": "Un accusé de réception vient de vous être envoyé par email. Conservez votre référence : notre support vous la demandera.",
+    "back": "Retour aux produits"
+  },
+
+  "Errors": {
+    "invalidFields": "Certains champs sont invalides.",
+    "turnstile": "Vérification anti-robot échouée. Rechargez la page.",
+    "tooManyOrders": "Trop de commandes envoyées. Réessayez dans {minutes, plural, one {# minute} other {# minutes}}.",
+    "tooManyAttempts": "Trop d'essais. Réessayez dans {minutes, plural, one {# minute} other {# minutes}}.",
+    "emptyCart": "Aucun produit valide dans votre panier.",
+    "productUnavailable": "Un produit de votre panier n'est plus disponible. Rechargez la page pour mettre à jour votre panier.",
+    "requiresConsumable": "« {name} » ne peut pas être commandé seul : ajoutez au moins un pack de bandelettes réactives.",
+    "pickupUnavailable": "Le retrait en agence n'est pas disponible.",
+    "pickupUnknown": "Point de retrait inconnu.",
+    "codesExclusive": "Un code médecin et un code promo ne se cumulent pas. N'en gardez qu'un.",
+    "promoInvalid": "Ce code promo n'est pas valide.",
+    "promoRequired": "Saisissez un code promo.",
+    "pricing": "Erreur de tarification.",
+    "serviceUnavailable": "Le service de commande est momentanément indisponible. Votre panier est conservé, réessayez dans quelques minutes.",
+    "sendFailed": "Votre commande n'a pas pu être transmise. Votre panier est conservé, réessayez."
+  },
+
+  "EmailReceipt": {
+    "subject": "Votre commande {reference} chez e-Doctor TIM Marketplace",
+    "preview": "Nous avons bien reçu votre demande {reference}",
+    "greeting": "Merci, {firstName}.",
+    "intro": "Nous avons bien reçu votre demande de commande. Votre référence est <strong>{reference}</strong>. Conservez-la, notre support vous la demandera.",
+    "warning": "<strong>Cette commande n'est pas encore confirmée</strong> et aucun paiement n'a été effectué. Notre équipe vous contacte sous 24 à 48 h ouvrées pour confirmer la disponibilité, les frais de livraison et le règlement.",
+    "selectionTitle": "Votre sélection",
+    "line": "{quantity} × {name} — {amount}",
+    "subtotal": "Sous-total : {amount}",
+    "promoLine": "Code promo {code} (−{percent} %) : −{amount}",
+    "netSubtotal": "Sous-total : {amount}",
+    "shippingNote": "Frais de livraison communiqués lors de la confirmation.",
+    "medicalNotice": "Dispositifs médicaux — lisez attentivement la notice avant utilisation. Ces informations ne remplacent pas l'avis d'un professionnel de santé."
+  }
+}

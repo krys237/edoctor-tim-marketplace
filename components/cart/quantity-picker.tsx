@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { MAX_QUANTITY } from "@/lib/cart-store";
 
 type Props = {
@@ -11,6 +13,7 @@ type Props = {
 };
 
 export function QuantityPicker({ value, onChange, labelledBy, label }: Props) {
+  const t = useTranslations("Product.quantity");
   const clamp = (n: number) => Math.min(MAX_QUANTITY, Math.max(1, n));
 
   return (
@@ -19,7 +22,7 @@ export function QuantityPicker({ value, onChange, labelledBy, label }: Props) {
         type="button"
         onClick={() => onChange(clamp(value - 1))}
         disabled={value <= 1}
-        aria-label="Diminuer la quantité"
+        aria-label={t("decrease")}
         className="hover:bg-secondary flex size-11 cursor-pointer items-center justify-center rounded-l-md text-lg transition-colors disabled:cursor-not-allowed disabled:opacity-40"
       >
         −
@@ -32,7 +35,7 @@ export function QuantityPicker({ value, onChange, labelledBy, label }: Props) {
         max={MAX_QUANTITY}
         value={value}
         aria-labelledby={labelledBy}
-        aria-label={labelledBy ? undefined : (label ?? "Quantité")}
+        aria-label={labelledBy ? undefined : (label ?? t("label"))}
         onChange={(e) => {
           const next = Number.parseInt(e.target.value, 10);
           // Un champ vide ou non numerique ne doit pas produire NaN dans l'etat.
@@ -45,7 +48,7 @@ export function QuantityPicker({ value, onChange, labelledBy, label }: Props) {
         type="button"
         onClick={() => onChange(clamp(value + 1))}
         disabled={value >= MAX_QUANTITY}
-        aria-label="Augmenter la quantité"
+        aria-label={t("increase")}
         className="hover:bg-secondary flex size-11 cursor-pointer items-center justify-center rounded-r-md text-lg transition-colors disabled:cursor-not-allowed disabled:opacity-40"
       >
         +

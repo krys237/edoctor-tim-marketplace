@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
 import { useCart } from "@/lib/cart-store";
@@ -19,6 +20,7 @@ export function AddToCartButton({
   disabled = false,
   className = "",
 }: Props) {
+  const t = useTranslations("Product");
   const add = useCart((s) => s.add);
   const [justAdded, setJustAdded] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -45,7 +47,7 @@ export function AddToCartButton({
             : "bg-primary text-primary-foreground hover:bg-primary/90"
         } disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
       >
-        {justAdded ? "Ajouté au panier" : "Ajouter au panier"}
+        {justAdded ? t("added") : t("addToCart")}
       </button>
 
       {/*
@@ -53,7 +55,7 @@ export function AddToCartButton({
         confirmation est annoncee separement, sans voler le focus.
       */}
       <span role="status" aria-live="polite" className="sr-only">
-        {justAdded ? `${productName} ajouté au panier` : ""}
+        {justAdded ? t("addedAnnouncement", { name: productName }) : ""}
       </span>
     </>
   );

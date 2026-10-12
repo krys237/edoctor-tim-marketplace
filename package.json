@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "check:rules": "tsx scripts/check-order-rules.ts",
     "check:emails": "tsx scripts/check-emails.ts",
+    "check:messages": "tsx scripts/check-messages.ts",
     "check:contrast": "python scripts/check-contrast.py"
   },
   "dependencies": {
@@ -22,6 +23,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^1.23.0",
     "next": "16.2.10",
+    "next-intl": "^4.14.9",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hook-form": "^7.81.0",

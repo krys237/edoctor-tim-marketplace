@@ -309,58 +309,94 @@ Aucune base de données, aucun service à administrer. La surface d'attaque et l
 
 ### 7.2 Arborescence
 
+État réel du dépôt (mis à jour le 12 octobre 2026, après l'ajout du multilingue).
+Les pages légales, le contact, le sitemap et les tests e2e restent à faire (voir §11).
+
 ```
 edoctor-place/
 ├── app/
-│   ├── layout.tsx                  # header, footer, bandeau réglementaire
-│   ├── page.tsx                    # accueil
-│   ├── produits/
-│   │   ├── page.tsx                # catalogue (filtres via searchParams)
-│   │   └── [slug]/page.tsx         # fiche produit + JSON-LD
-│   ├── panier/page.tsx
-│   ├── commande/
-│   │   ├── page.tsx                # checkout
-│   │   └── confirmation/[ref]/page.tsx
-│   ├── (legal)/
-│   │   ├── mentions-legales/page.tsx
-│   │   ├── cgv/page.tsx
-│   │   └── confidentialite/page.tsx
-│   ├── contact/page.tsx
-│   ├── sitemap.ts
-│   └── robots.ts
+│   ├── [locale]/                   # fr (sans préfixe) et en (/en) — voir docs/internationalisation.md
+│   │   ├── layout.tsx              # polices, header, footer, NextIntlClientProvider
+│   │   ├── page.tsx                # accueil
+│   │   ├── produits/
+│   │   │   ├── page.tsx            # catalogue (filtres via searchParams)
+│   │   │   └── [slug]/page.tsx     # fiche produit + JSON-LD, prérendue par langue
+│   │   ├── panier/page.tsx
+│   │   ├── commande/
+│   │   │   ├── page.tsx            # checkout
+│   │   │   └── confirmation/[reference]/page.tsx
+│   │   └── design/page.tsx         # référence de style interne (noindex)
+│   ├── fonts/                      # Butler (licence : LICENSE-Butler.md)
+│   ├── globals.css
+│   ├── icon.png
+│   └── apple-icon.png
+│
+├── proxy.ts                        # détection de langue, réécriture /en/products → [locale]/produits
+├── global.d.ts                     # typage next-intl : locales et clés de messages
+│
+├── i18n/
+│   ├── routing.ts                  # locales, chemins traduits — source de vérité
+│   ├── navigation.ts               # Link, useRouter, redirect, getPathname localisés
+│   ├── request.ts                  # configuration par requête (messages, fuseau)
+│   └── messages.ts                 # import statique des catalogues
+├── messages/
+│   ├── fr.json                     # référence
+│   └── en.json                     # même structure, vérifiée par check:messages
 │
 ├── actions/
-│   └── submit-order.ts             # 'use server' — unique point d'entrée mutant
+│   ├── submit-order.ts             # 'use server' — unique point d'entrée mutant
+│   └── validate-promo.ts           # vérification d'un code promo, sans révéler la liste
 │
 ├── components/
 │   ├── ui/                         # primitives shadcn/ui
-│   ├── product/                    # ProductCard, ProductGallery, SpecsTable
-│   ├── cart/                       # CartSheet, CartLine, CartSummary
-│   └── checkout/                   # CheckoutForm, FulfillmentSelector
+│   ├── layout/                     # SiteHeader, SiteFooter, Brand, CartBadge, LocaleSwitcher
+│   ├── product/                    # ProductCard
+│   ├── cart/                       # CartView, AddToCartButton, QuantityPicker, ProductPurchase
+│   └── checkout/                   # CheckoutForm
 │
 ├── lib/
-│   ├── catalog.ts                  # lecture + indexation du catalogue
-│   ├── cart-store.ts               # Zustand + persist
-│   ├── schemas.ts                  # schémas Zod partagés client/serveur
+│   ├── catalog.ts                  # lecture, validation et résolution par langue du catalogue
+│   ├── schemas.ts                  # schémas Zod partagés client/serveur, textes localisés
+│   ├── cart-store.ts               # Zustand + persist (identifiants et quantités seulement)
+│   ├── cart-rules.ts               # règles métier pures, violations sous forme de codes
+│   ├── order.ts                    # contrat d'entrée de la commande, type Order (avec locale)
 │   ├── order-reference.ts
-│   ├── money.ts                    # formatage, arithmétique entière
-│   └── rate-limit.ts
+│   ├── money.ts                    # formatage par langue, arithmétique entière
+│   ├── alternates.ts               # balises hreflang d'une page
+│   ├── translator.ts               # traducteurs hors requête (emails, scripts)
+│   ├── pickup.ts
+│   ├── promo.ts                    # server-only
+│   ├── pricing-doctor.ts           # server-only
+│   ├── turnstile.ts
+│   ├── rate-limit.ts
+│   ├── constant-time.ts
+│   └── utils.ts
 │
 ├── emails/
-│   ├── OrderInternal.tsx           # React Email
-│   └── OrderReceipt.tsx
+│   ├── order-internal.tsx          # React Email, support (français)
+│   └── order-receipt.tsx           # accusé client, dans la langue de la commande
 │
 ├── data/
-│   ├── products.json
-│   └── pickup-locations.json
+│   ├── products.json               # textes en { fr, en }
+│   ├── pickup-locations.json
+│   └── pricing-doctor.server.json
+│
+├── scripts/
+│   ├── check-order-rules.ts
+│   ├── check-emails.ts
+│   ├── check-messages.ts
+│   └── check-contrast.py
 │
 ├── public/
-│   ├── images/products/
-│   └── notices/                    # notices PDF des dispositifs
+│   └── images/                     # produits, marque
 │
-├── docs/
-│   └── cahier-des-charges.md       # ce document
-└── e2e/                            # Playwright
+└── docs/
+    ├── cahier-des-charges.md       # ce document
+    ├── internationalisation.md
+    ├── catalogue.md
+    ├── commande.md
+    ├── design-system.md
+    └── deploiement-vercel.md
 ```
 
 ### 7.3 Décisions d'architecture et leur justification

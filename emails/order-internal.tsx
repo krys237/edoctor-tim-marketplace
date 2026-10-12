@@ -18,6 +18,12 @@ import type { Order } from "@/lib/order";
 const NAVY = "#000A2B";
 const MUTED = "#4B5563";
 
+/** L'email interne est en francais : la langue du client y est dite en francais. */
+const CUSTOMER_LANGUAGE: Record<Order["locale"], string> = {
+  fr: "français",
+  en: "anglais",
+};
+
 export function OrderInternalEmail({ order }: { order: Order }) {
   const f = order.fulfillment;
 
@@ -62,6 +68,9 @@ export function OrderInternalEmail({ order }: { order: Order }) {
             {order.customer.email}
             <br />
             {order.customer.phone}
+            <br />
+            {/* Langue du site au moment de la commande : rappeler le client dans celle-ci. */}
+            Langue : {CUSTOMER_LANGUAGE[order.locale]}
           </Text>
 
           {order.business?.companyName && (
